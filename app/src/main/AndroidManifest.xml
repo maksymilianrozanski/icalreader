@@ -4,7 +4,7 @@
           xmlns:tools="http://schemas.android.com/tools" package="io.github.maksymilianrozanski.icalreader">
 
     <dist:module dist:instant="true"/>
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
             android:name=".MyApp"
             android:allowBackup="true"
