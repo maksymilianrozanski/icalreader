@@ -6,7 +6,7 @@ import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.component.DaggerAppComponent
 import io.github.maksymilianrozanski.icalreader.module.AppModule
 
-class MyApp : Application(){
+class MyApp : Application() {
 
     lateinit var appComponent: AppComponent
 

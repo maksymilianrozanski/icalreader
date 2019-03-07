@@ -1,22 +1,29 @@
 package io.github.maksymilianrozanski.icalreader
 
+import android.arch.lifecycle.MutableLiveData
+import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class PostListViewModel:BaseViewModel(){
+class PostListViewModel : BaseViewModel() {
     @Inject
-    lateinit var postApi: PostApi
+    lateinit var api: APIService
+
+    val helloWorldData: MutableLiveData<String> by lazy {
+        MutableLiveData<String>()
+    }
 
     private lateinit var subscription: Disposable
 
-    init{
+    init {
         loadPosts()
     }
 
-    private fun loadPosts(){
-        subscription = postApi.getPosts()
+    private fun loadPosts() {
+//        subscription = api.getEvents()
+        subscription = api.getHome()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { onRetrievePostListStart() }
@@ -27,20 +34,21 @@ class PostListViewModel:BaseViewModel(){
             )
     }
 
-    private fun onRetrievePostListStart(){
-
+    private fun onRetrievePostListStart() {
+        println("inside onRetrievePostListStart")
     }
 
-    private fun onRetrievePostListFinish(){
-
+    private fun onRetrievePostListFinish() {
+        println("inside onRetrievePostListFinish, changing helloWorldData")
+        helloWorldData.value = "Value has been changed by ViewModel"
     }
 
-    private fun onRetrievePostListSuccess(){
-
+    private fun onRetrievePostListSuccess() {
+        println("inside onRetrievePostListSuccess")
     }
 
-    private fun onRetrievePostListError(){
-
+    private fun onRetrievePostListError() {
+        println("inside onRetrievePostListError")
     }
 
     override fun onCleared() {
