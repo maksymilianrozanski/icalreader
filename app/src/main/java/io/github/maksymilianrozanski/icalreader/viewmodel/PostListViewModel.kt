@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader
+package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.data.APIService
