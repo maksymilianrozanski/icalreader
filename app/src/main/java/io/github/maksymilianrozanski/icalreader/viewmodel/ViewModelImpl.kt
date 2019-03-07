@@ -1,6 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
+import io.github.maksymilianrozanski.icalreader.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,51 +16,22 @@ class ViewModelImpl : BaseViewModel() {
     @Inject
     lateinit var model: Model
 
-    val helloWorldData: MutableLiveData<String> by lazy {
-        MutableLiveData<String>()
+    val events: MutableLiveData<MutableList<CalendarEvent>> by lazy {
+        MutableLiveData<MutableList<CalendarEvent>>()
     }
 
     private lateinit var subscription: Disposable
 
     init {
-        getTimeInMillis()
+        requestEvents()
     }
 
-    private fun getTimeInMillis(){
-        subscription = model.requestData().subscribeOn(Schedulers.io())
+    private fun requestEvents() {
+        subscription = model.requestEvents().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {
-                helloWorldData.value = it
+                events.value = it.toMutableList()
             }
-    }
-
-    private fun loadPosts() {
-//        subscription = api.getEvents()
-        subscription = api.getHome()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { onRetrievePostListStart() }
-            .doOnTerminate { onRetrievePostListFinish() }
-            .subscribe(
-                { onRetrievePostListSuccess() },
-                { onRetrievePostListError() }
-            )
-    }
-
-    private fun onRetrievePostListStart() {
-        println("inside onRetrievePostListStart")
-    }
-
-    private fun onRetrievePostListFinish() {
-        println("inside onRetrievePostListFinish, changing helloWorldData")
-    }
-
-    private fun onRetrievePostListSuccess() {
-        println("inside onRetrievePostListSuccess")
-    }
-
-    private fun onRetrievePostListError() {
-        println("inside onRetrievePostListError")
     }
 
     override fun onCleared() {
