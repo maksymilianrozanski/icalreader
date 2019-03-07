@@ -7,7 +7,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class PostListViewModel : BaseViewModel() {
+class ViewModelImpl : BaseViewModel() {
     @Inject
     lateinit var api: APIService
 

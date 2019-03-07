@@ -4,23 +4,23 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import io.github.maksymilianrozanski.icalreader.viewmodel.PostListViewModel
+import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelImpl
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: PostListViewModel
+    private lateinit var viewModelImpl: ViewModelImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this).get(PostListViewModel::class.java)
+        viewModelImpl = ViewModelProviders.of(this).get(ViewModelImpl::class.java)
 
         val helloWorldObserver = Observer<String> { newText ->
             HelloWorldTextView.text = newText
         }
 
-        viewModel.helloWorldData.observe(this, helloWorldObserver)
+        viewModelImpl.helloWorldData.observe(this, helloWorldObserver)
 
         setContentView(R.layout.activity_main)
     }
