@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.data.APIService
+import io.github.maksymilianrozanski.icalreader.model.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -11,6 +12,9 @@ class ViewModelImpl : BaseViewModel() {
     @Inject
     lateinit var api: APIService
 
+    @Inject
+    lateinit var model: Model
+
     val helloWorldData: MutableLiveData<String> by lazy {
         MutableLiveData<String>()
     }
@@ -18,7 +22,15 @@ class ViewModelImpl : BaseViewModel() {
     private lateinit var subscription: Disposable
 
     init {
-        loadPosts()
+        getTimeInMillis()
+    }
+
+    private fun getTimeInMillis(){
+        subscription = model.requestData().subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                helloWorldData.value = it
+            }
     }
 
     private fun loadPosts() {
@@ -40,7 +52,6 @@ class ViewModelImpl : BaseViewModel() {
 
     private fun onRetrievePostListFinish() {
         println("inside onRetrievePostListFinish, changing helloWorldData")
-        helloWorldData.value = "Value has been changed by ViewModel"
     }
 
     private fun onRetrievePostListSuccess() {
