@@ -6,7 +6,8 @@
 
     <LinearLayout
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content">
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
 
         <TextView
                 android:id="@+id/eventTitleTextView"
@@ -15,10 +16,28 @@
                 android:text="ExampleEvent"/>
 
         <TextView
-                android:id="@+id/eventDateTextView"
+                android:id="@+id/eventDateStartTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2019-02-02"/>
+                android:text="2019-02-02 18:00"/>
+
+        <TextView
+                android:id="@+id/eventDateEndTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2019-02-02 19:00"/>
+
+        <TextView
+                android:id="@+id/eventDescriptionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Example event description"/>
+
+        <TextView
+                android:id="@+id/eventLocationTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Warsaw"/>
 
     </LinearLayout>
 

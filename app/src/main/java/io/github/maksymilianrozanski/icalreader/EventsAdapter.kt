@@ -30,12 +30,17 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var eventTitle = itemView.findViewById(R.id.eventTitleTextView) as TextView
-        var eventDate = itemView.findViewById(R.id.eventDateTextView) as TextView
+        var eventDateStart = itemView.findViewById(R.id.eventDateStartTextView) as TextView
+        var eventDateEnd = itemView.findViewById(R.id.eventDateEndTextView) as TextView
+        var eventDescription = itemView.findViewById(R.id.eventDescriptionTextView) as TextView
+        var eventLocation = itemView.findViewById(R.id.eventLocationTextView) as TextView
 
         fun bindViews(event: CalendarEvent) {
-            eventTitle.text = event.name
-            eventDate.text = event.date
-
+            eventTitle.text = event.title
+            eventDateStart.text = event.dateStart
+            eventDateEnd.text = event.dateEnd
+            eventDescription.text = event.description
+            eventLocation.text = event.location
         }
     }
 }
