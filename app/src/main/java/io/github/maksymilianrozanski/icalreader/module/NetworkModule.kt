@@ -15,6 +15,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 // Safe here as we are dealing with a Dagger 2 module
 @Suppress("unused")
 object NetworkModule {
+    const val baseUrl = "http://example.com/"
+
     /**
      * Provides the Post service implementation.
      * @param retrofit the Retrofit object used to instantiate the service
@@ -42,7 +44,7 @@ object NetworkModule {
 
 
         return Retrofit.Builder()
-            .baseUrl("http://example.com")
+            .baseUrl(baseUrl)
             .client(okHttpClient.build())
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
