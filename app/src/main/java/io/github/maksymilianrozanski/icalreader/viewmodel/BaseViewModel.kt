@@ -1,7 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.arch.lifecycle.ViewModel
-import io.github.maksymilianrozanski.icalreader.NetworkModule
+import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 
 abstract class BaseViewModel : ViewModel() {
     private val injector: ViewModelInjector = DaggerViewModelInjector.builder()

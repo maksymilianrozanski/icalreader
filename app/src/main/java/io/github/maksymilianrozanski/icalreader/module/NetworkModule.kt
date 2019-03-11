@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader
+package io.github.maksymilianrozanski.icalreader.module
 
 import dagger.Module
 import dagger.Provides

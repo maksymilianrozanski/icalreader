@@ -1,7 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import dagger.Component
-import io.github.maksymilianrozanski.icalreader.NetworkModule
+import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import io.github.maksymilianrozanski.icalreader.module.ModelImplModule
 import javax.inject.Singleton
 
