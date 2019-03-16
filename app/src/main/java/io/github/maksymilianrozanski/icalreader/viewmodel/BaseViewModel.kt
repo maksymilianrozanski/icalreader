@@ -5,7 +5,7 @@ import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 
 abstract class BaseViewModel : ViewModel() {
     private val injector: ViewModelInjector = DaggerViewModelInjector.builder()
-        .networkModule(NetworkModule)
+        .networkModule(NetworkModule())
         .build()
 
     init {

@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.CalendarEvent
-import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -10,8 +9,6 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 class ViewModelImpl : BaseViewModel() {
-    @Inject
-    lateinit var api: APIService
 
     @Inject
     lateinit var model: Model
@@ -29,6 +26,7 @@ class ViewModelImpl : BaseViewModel() {
     private fun requestEvents() {
         subscription = model.requestEvents().subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnError { println("Error") }
             .subscribe {
                 events.value = it.toMutableList()
             }

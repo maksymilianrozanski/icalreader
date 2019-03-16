@@ -1,9 +1,11 @@
 package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.reactivex.Observable
+import javax.inject.Inject
 
-class ModelImpl : Model {
+class ModelImpl @Inject constructor(val apiService: APIService) : Model {
 
     override fun requestData(): Observable<String> {
         Thread.sleep(1000)
@@ -26,6 +28,15 @@ class ModelImpl : Model {
             "Description of second event",
             "Europe"
         )
-        return Observable.just(listOf(event1, event2))
+
+        return apiService.getResponse().map { t ->
+            println(t.code())
+
+            val iCalString = t.body()!!.string()
+            val iCalReader = ICalReader()
+            val events = iCalReader.getCalendarEvents(iCalString)
+
+            events
+        }
     }
 }

@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.CalendarEvent
 import net.fortuna.ical4j.data.CalendarBuilder
+import net.fortuna.ical4j.data.CalendarParserImpl
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.validate.ValidationException
@@ -13,10 +14,8 @@ class ICalReader {
     fun getCalendarEvents(inputICal: String): List<CalendarEvent> {
 
         val stringReader = StringReader(inputICal)
-        val calendarBuilder = CalendarBuilder()
+        val calendarBuilder = CalendarBuilder(CalendarParserImpl(), MyTimeZoneRegistry())
         val calendar: Calendar = calendarBuilder.build(stringReader)
-
-        calendar.validate()
 
         val components = calendar.components
         val calendarEvents = mutableListOf<CalendarEvent>()

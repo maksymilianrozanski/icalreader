@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.icalreader.module
 
 import dagger.Module
 import dagger.Provides
-import dagger.Reusable
 import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
@@ -12,36 +11,20 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
-// Safe here as we are dealing with a Dagger 2 module
-@Suppress("unused")
-object NetworkModule {
-    const val baseUrl = "http://example.com/"
+class NetworkModule {
+    val baseUrl = "http://10.0.2.2:8080/"
 
-    /**
-     * Provides the Post service implementation.
-     * @param retrofit the Retrofit object used to instantiate the service
-     * @return the Post service implementation.
-     */
     @Provides
-    @Reusable
-    @JvmStatic
-    internal fun providePostApi(retrofit: Retrofit): APIService {
+    fun provideApi(retrofit: Retrofit): APIService {
         return retrofit.create(APIService::class.java)
     }
 
-    /**
-     * Provides the Retrofit object.
-     * @return the Retrofit object
-     */
     @Provides
-    @Reusable
-    @JvmStatic
-    internal fun provideRetrofitInterface(): Retrofit {
+    fun provideRetrofitInterface(): Retrofit {
         val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val okHttpClient = OkHttpClient.Builder()
         okHttpClient.addInterceptor(interceptor)
-
 
         return Retrofit.Builder()
             .baseUrl(baseUrl)
