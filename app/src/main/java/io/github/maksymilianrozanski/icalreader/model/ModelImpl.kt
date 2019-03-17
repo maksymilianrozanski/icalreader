@@ -13,22 +13,6 @@ class ModelImpl @Inject constructor(val apiService: APIService) : Model {
     }
 
     override fun requestEvents(): Observable<List<CalendarEvent>> {
-        Thread.sleep(500)
-        val event1 = CalendarEvent(
-            "title of first calendar event",
-            "2019-03-03 17:00",
-            "2019-03-03 19:00",
-            "Description of first event",
-            "Warsaw"
-        )
-        val event2 = CalendarEvent(
-            "title of second calendar event",
-            "2019-02-02 11:00",
-            "2019-02-02 14:00",
-            "Description of second event",
-            "Europe"
-        )
-
         return apiService.getResponse().map { t ->
             println(t.code())
 
