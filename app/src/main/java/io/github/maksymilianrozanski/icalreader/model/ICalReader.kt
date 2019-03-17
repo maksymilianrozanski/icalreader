@@ -6,7 +6,10 @@ import net.fortuna.ical4j.data.CalendarParserImpl
 import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.validate.ValidationException
+import org.apache.commons.lang3.time.DateUtils
 import java.io.StringReader
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.Objects.isNull
 
 class ICalReader {
@@ -60,4 +63,10 @@ class ICalReader {
         }
         return calendarEvents
     }
+}
+
+fun toWarsawTimeZone(input: String): Date {
+    val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+    val date =  dateFormat.parse(input)
+    return DateUtils.addHours(date, 1)
 }

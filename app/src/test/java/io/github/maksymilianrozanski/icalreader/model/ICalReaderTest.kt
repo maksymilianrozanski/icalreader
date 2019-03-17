@@ -1,6 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.model
 
 import net.fortuna.ical4j.validate.ValidationException
+import org.junit.Assert
 import org.junit.Assert.assertTrue
 import org.junit.Test
 import kotlin.test.assertEquals
@@ -112,5 +113,14 @@ class ICalReaderTest {
         assertEquals(
             exceptionMessage, "DTSTART or DTEND property not available. isNull: DTSTART:false, DTEND:true"
         )
+    }
+
+    @Test
+    fun convertDate(){
+        val input = "20180302T173000Z"
+        println(toWarsawTimeZone(input))
+        val output = toWarsawTimeZone(input)
+        val outputString :String = output.toString()
+        Assert.assertEquals("Fri Mar 02 18:30:00 CET 2018", outputString)
     }
 }
