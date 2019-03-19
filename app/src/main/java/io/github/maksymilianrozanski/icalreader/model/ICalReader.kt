@@ -23,17 +23,16 @@ class ICalReader {
         val components = calendar.components
         val calendarEvents = mutableListOf<CalendarEvent>()
 
-        components.forEach { it ->
+        components.forEach {
             var title = ""
             if (it.getProperty<Property>(Property.SUMMARY) != null) {
                 title = it.getProperty<Property>(Property.SUMMARY).value
             }
-            //TODO: convert event's start and end dates
             val start: String
             val end: String
             if (it.getProperty<Property>(Property.DTSTART) != null && it.getProperty<Property>(Property.DTEND) != null) {
-                start = it.getProperty<Property>(Property.DTSTART).value
-                end = it.getProperty<Property>(Property.DTEND).value
+                start = toWarsawTimeZone(it.getProperty<Property>(Property.DTSTART).value).toString()
+                end = toWarsawTimeZone(it.getProperty<Property>(Property.DTEND).value).toString()
             } else {
                 throw ValidationException(
                     "DTSTART or DTEND property not available. isNull: DTSTART:${

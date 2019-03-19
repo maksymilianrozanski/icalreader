@@ -30,8 +30,13 @@ class ICalReaderTest {
         val indexZeroEvent = output[0]
 
         assertTrue(indexZeroEvent.title == "Bastille Day Party")
-        assertTrue(indexZeroEvent.dateStart == "19970714T170000Z")
-        assertTrue(indexZeroEvent.dateEnd == "19970715T035959Z")
+        println(indexZeroEvent.dateEnd)
+        assertTrue(indexZeroEvent.dateStart.contains("1997"))
+        assertTrue(indexZeroEvent.dateStart.contains("Jul 14"))
+        assertTrue(indexZeroEvent.dateStart.contains("18:00"))
+        assertTrue(indexZeroEvent.dateEnd.contains("1997"))
+        assertTrue(indexZeroEvent.dateEnd.contains("Jul 15"))
+        assertTrue(indexZeroEvent.dateEnd.contains("04:59"))
         assertTrue(indexZeroEvent.description == "This is example event description.")
         assertTrue(indexZeroEvent.location == "Warsaw")
     }
@@ -57,8 +62,12 @@ class ICalReaderTest {
         val indexZeroEvent = output[0]
 
         assertTrue(indexZeroEvent.title == "")
-        assertTrue(indexZeroEvent.dateStart == "19970714T170000Z")
-        assertTrue(indexZeroEvent.dateEnd == "19970715T035959Z")
+        assertTrue(indexZeroEvent.dateStart.contains("1997"))
+        assertTrue(indexZeroEvent.dateStart.contains("Jul 14"))
+        assertTrue(indexZeroEvent.dateStart.contains("18:00"))
+        assertTrue(indexZeroEvent.dateEnd.contains("1997"))
+        assertTrue(indexZeroEvent.dateEnd.contains("Jul 15"))
+        assertTrue(indexZeroEvent.dateEnd.contains("04:59"))
         assertTrue(indexZeroEvent.description == "")
         assertTrue(indexZeroEvent.location == "")
     }
@@ -90,7 +99,7 @@ class ICalReaderTest {
     }
 
     @Test
-    fun getCalendarEventNoEndDateTest(){
+    fun getCalendarEventNoEndDateTest() {
         val inputICalString = "BEGIN:VCALENDAR\n" +
                 "VERSION:2.0\n" +
                 "PRODID:-//hacksw/handcal//NONSGML v1.0//EN\n" +
@@ -116,11 +125,11 @@ class ICalReaderTest {
     }
 
     @Test
-    fun convertDate(){
+    fun convertDate() {
         val input = "20180302T173000Z"
         println(toWarsawTimeZone(input))
         val output = toWarsawTimeZone(input)
-        val outputString :String = output.toString()
+        val outputString: String = output.toString()
         Assert.assertEquals("Fri Mar 02 18:30:00 CET 2018", outputString)
     }
 }
