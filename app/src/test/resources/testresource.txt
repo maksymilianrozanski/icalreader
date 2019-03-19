@@ -1,0 +1,2 @@
+This is text from testresource.txt
+This is second line from testresource.txt

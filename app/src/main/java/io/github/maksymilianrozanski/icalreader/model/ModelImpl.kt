@@ -5,7 +5,7 @@ import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class ModelImpl @Inject constructor(val apiService: APIService) : Model {
+class ModelImpl @Inject constructor(val apiService: APIService, val iCalReader: ICalReader) : Model {
 
     override fun requestData(): Observable<String> {
         Thread.sleep(1000)
@@ -17,7 +17,6 @@ class ModelImpl @Inject constructor(val apiService: APIService) : Model {
             println(t.code())
 
             val iCalString = t.body()!!.string()
-            val iCalReader = ICalReader()
             val events = iCalReader.getCalendarEvents(iCalString)
 
             events

@@ -25,7 +25,7 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReader()
+        val iCalReader = ICalReaderImpl()
         val output = iCalReader.getCalendarEvents(inputICalString)
         val indexZeroEvent = output[0]
 
@@ -57,7 +57,7 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReader()
+        val iCalReader = ICalReaderImpl()
         val output = iCalReader.getCalendarEvents(inputICalString)
         val indexZeroEvent = output[0]
 
@@ -88,7 +88,7 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReader()
+        val iCalReader = ICalReaderImpl()
         val exceptionMessage = assertFailsWith(ValidationException::class) {
             iCalReader.getCalendarEvents(inputICalString)
         }.message
@@ -114,7 +114,7 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReader()
+        val iCalReader = ICalReaderImpl()
         val exceptionMessage = assertFailsWith(ValidationException::class) {
             iCalReader.getCalendarEvents(inputICalString)
         }.message
