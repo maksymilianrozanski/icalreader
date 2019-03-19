@@ -18,7 +18,6 @@ interface ViewModelInjector {
     interface Builder {
         fun build(): ViewModelInjector
 
-        fun networkModule(networkModule: NetworkModule): Builder
         fun modelImplModule(modelImplModule: ModelImplModule): Builder
     }
 }
