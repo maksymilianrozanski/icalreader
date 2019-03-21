@@ -6,14 +6,11 @@ import dagger.Component
 import io.github.maksymilianrozanski.icalreader.MainActivity
 import io.github.maksymilianrozanski.icalreader.MyApp
 import io.github.maksymilianrozanski.icalreader.model.Model
-import io.github.maksymilianrozanski.icalreader.module.AppModule
-import io.github.maksymilianrozanski.icalreader.module.ICalReaderModule
-import io.github.maksymilianrozanski.icalreader.module.ModelImplModule
-import io.github.maksymilianrozanski.icalreader.module.NetworkModule
+import io.github.maksymilianrozanski.icalreader.module.*
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, NetworkModule::class, ModelImplModule::class, ICalReaderModule::class])
+@Component(modules = [AppModule::class, ViewModelModule::class, NetworkModule::class, ModelImplModule::class, ICalReaderModule::class])
 interface AppComponent {
 
     fun inject(myApp: MyApp)
