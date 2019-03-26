@@ -27,7 +27,6 @@ class MainActivityTest {
         val mockResponse = MockResponse()
         mockResponse.setResponseCode(200)
         val testHelper = AndroidTestHelper()
-        //TODO: fix polish characters locale
         mockResponse.setBody(testHelper.getStringFromFile(InstrumentationRegistry.getContext(), "exampleCalendar.txt"))
         server.enqueue(mockResponse)
 
