@@ -12,8 +12,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 @Module
 class NetworkModule {
-    val baseUrl = "http://10.0.2.2:8080/"
-
     @Provides
     fun provideApi(retrofit: Retrofit): APIService {
         return retrofit.create(APIService::class.java)
@@ -32,5 +30,9 @@ class NetworkModule {
             .addConverterFactory(GsonConverterFactory.create())
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
+    }
+
+    companion object {
+        var baseUrl = "http://10.0.2.2:8080/"
     }
 }

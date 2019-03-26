@@ -1,0 +1,2 @@
+This is text from testresource.txt
+This is second line.Polish characters: óÓ ąĄ śŚ łŁ żŻ źŹ ćĆ ńŃ from testresource.txt
