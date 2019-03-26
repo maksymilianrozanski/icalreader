@@ -1,23 +1,18 @@
 package io.github.maksymilianrozanski.icalreader
 
-import android.support.annotation.NonNull
 import android.support.test.InstrumentationRegistry
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.assertion.ViewAssertions.matches
 import android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition
-import android.support.test.espresso.matcher.BoundedMatcher
 import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
 import android.support.v7.widget.RecyclerView
-import android.view.View
 import io.github.maksymilianrozanski.icalreader.component.DaggerTestAppComponent
 import io.github.maksymilianrozanski.icalreader.module.AppModule
 import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.Description
-import org.hamcrest.Matcher
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -130,23 +125,5 @@ class MainActivityTest {
             )
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(3, hasDescendant(withText(containsString("św. Filipa 17 Kraków"))))))
-    }
-
-    //TODO: move to another class
-    fun atPosition(position: Int, @NonNull itemMatcher: Matcher<View>): Matcher<View> {
-        checkNotNull(itemMatcher)
-        return object : BoundedMatcher<View, RecyclerView>(RecyclerView::class.java) {
-            override fun describeTo(description: Description) {
-                description.appendText("has item at position $position: ")
-                itemMatcher.describeTo(description)
-            }
-
-            override fun matchesSafely(view: RecyclerView): Boolean {
-                val viewHolder = view.findViewHolderForAdapterPosition(position)
-                    ?: // has no item on such position
-                    return false
-                return itemMatcher.matches(viewHolder.itemView)
-            }
-        }
     }
 }
