@@ -1,6 +1,6 @@
 package io.github.maksymilianrozanski.icalreader.model
 
-import io.github.maksymilianrozanski.icalreader.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import net.fortuna.ical4j.data.CalendarBuilder
 import net.fortuna.ical4j.data.CalendarParserImpl
 import net.fortuna.ical4j.model.Calendar

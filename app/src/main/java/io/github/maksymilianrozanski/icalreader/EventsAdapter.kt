@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 
 class EventsAdapter(private val context: Context, private var list: MutableList<CalendarEvent>) :
     RecyclerView.Adapter<EventsAdapter.ViewHolder>() {

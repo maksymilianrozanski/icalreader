@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
+import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelFactory
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelImpl
 import kotlinx.android.synthetic.main.activity_main.*

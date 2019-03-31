@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader
+package io.github.maksymilianrozanski.icalreader.data
 
 data class CalendarEvent(
     val title: String,

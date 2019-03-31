@@ -3,8 +3,8 @@ package io.github.maksymilianrozanski.icalreader.model
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.timeout
-import io.github.maksymilianrozanski.icalreader.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.TestHelper
+import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.module.NetworkTestModule
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -31,8 +31,20 @@ class ModelImplTest {
         val apiService = networkModule.provideApi()
 
         val mockedEvents = listOf(
-            CalendarEvent("Informatyka Lab", "01 Jan 2000 12:00", "01 Jan 2000 13:00", "Classroom 12", "Kraków"),
-            CalendarEvent("Historia", "01 Jan 2000 15:00", "01 Jan 2000 16:30", "Classroom 13", "Kraków")
+            CalendarEvent(
+                "Informatyka Lab",
+                "01 Jan 2000 12:00",
+                "01 Jan 2000 13:00",
+                "Classroom 12",
+                "Kraków"
+            ),
+            CalendarEvent(
+                "Historia",
+                "01 Jan 2000 15:00",
+                "01 Jan 2000 16:30",
+                "Classroom 13",
+                "Kraków"
+            )
         )
         val iCalReader = Mockito.mock(ICalReader::class.java)
         Mockito.`when`(iCalReader.getCalendarEvents(any())).thenReturn(mockedEvents)
@@ -41,7 +53,7 @@ class ModelImplTest {
         val model = ModelImpl(apiService, iCalReader)
         model.requestEvents().subscribe { obtainedResult.addAll(it) }
 
-        val recordedRequest = server.takeRequest();
+        val recordedRequest = server.takeRequest()
         Assert.assertTrue(recordedRequest.method == "GET")
         Assert.assertTrue(recordedRequest.path == "/api/test.ical")
 

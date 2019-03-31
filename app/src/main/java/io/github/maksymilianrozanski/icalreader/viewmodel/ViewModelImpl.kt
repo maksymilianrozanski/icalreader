@@ -1,7 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
-import io.github.maksymilianrozanski.icalreader.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
