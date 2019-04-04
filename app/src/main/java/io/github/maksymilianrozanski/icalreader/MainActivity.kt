@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelFactory
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelImpl
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,13 +34,13 @@ class MainActivity : AppCompatActivity() {
 
         viewModelImpl = ViewModelProviders.of(this, viewModelFactory).get(ViewModelImpl::class.java)
         layoutManager = LinearLayoutManager(this)
-        adapter = EventsAdapter(this, viewModelImpl.events.value ?: mutableListOf())
+        adapter = EventsAdapter(this, viewModelImpl.events.value?.data ?: mutableListOf())
 
         recyclerViewId.layoutManager = layoutManager
         recyclerViewId.adapter = adapter
 
-        val eventsObserver = Observer<MutableList<CalendarEvent>> {
-            adapter.setData(it!!)
+        val eventsObserver = Observer<CalendarResponse<MutableList<CalendarEvent>>> {
+            adapter.setData(it!!.data!!)
         }
         viewModelImpl.events.observe(this, eventsObserver)
     }

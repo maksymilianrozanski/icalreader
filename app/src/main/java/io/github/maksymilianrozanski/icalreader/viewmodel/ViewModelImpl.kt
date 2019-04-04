@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.arch.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -13,8 +14,8 @@ class ViewModelImpl : BaseViewModel() {
     @Inject
     lateinit var model: Model
 
-    val events: MutableLiveData<MutableList<CalendarEvent>> by lazy {
-        MutableLiveData<MutableList<CalendarEvent>>()
+    val events: MutableLiveData<CalendarResponse<MutableList<CalendarEvent>>> by lazy {
+        MutableLiveData<CalendarResponse<MutableList<CalendarEvent>>>()
     }
 
     private lateinit var subscription: Disposable
@@ -24,12 +25,17 @@ class ViewModelImpl : BaseViewModel() {
     }
 
     private fun requestEvents() {
-        subscription = model.requestEvents().subscribeOn(Schedulers.io())
+        subscription = model
+            .requestEvents()
+            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { println("Error") }
-            .subscribe {
-                events.value = it.toMutableList()
-            }
+            .subscribe({
+                events.value = CalendarResponse.success(it.data)
+            }, { t: Throwable? ->
+                events.value = CalendarResponse.error(null, t?.message)
+                println("Error: " + t?.message + t?.printStackTrace())
+            })
     }
 
     override fun onCleared() {
