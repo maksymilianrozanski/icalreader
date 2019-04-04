@@ -60,4 +60,25 @@ class ModelImplTest {
         Mockito.verify(iCalReader, timeout(200)).getCalendarEvents(argThat { equals(responseBody) })
         assertEquals(mockedEvents, obtainedResult)
     }
+
+    @Test
+    fun requestEventThrowingException() {
+        val server = MockWebServer()
+        server.start()
+        val mockResponse = MockResponse()
+        mockResponse.setResponseCode(500)
+        mockResponse.setBody("")
+        server.enqueue(mockResponse)
+
+        val networkModule = NetworkTestModule(server.url("/").toString())
+        val apiService = networkModule.provideApi()
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+
+        val model = ModelImpl(apiService, iCalReader)
+
+        val testObserver = model.requestEvents().test()
+        testObserver.awaitTerminalEvent()
+        testObserver.assertFailure(RequestFailedException::class.java)
+        testObserver.assertError { t: Throwable -> t.message == "Response code: 500" }
+    }
 }
