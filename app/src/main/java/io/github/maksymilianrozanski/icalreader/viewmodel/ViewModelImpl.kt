@@ -29,6 +29,7 @@ class ViewModelImpl : BaseViewModel() {
             .requestEvents()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { events.value = CalendarResponse.loading(mutableListOf()) }
             .doOnError { println("Error") }
             .subscribe({
                 events.value = CalendarResponse.success(it)
