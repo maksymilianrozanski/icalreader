@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.widget.Toast
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
@@ -40,7 +41,8 @@ class MainActivity : AppCompatActivity() {
         recyclerViewId.adapter = adapter
 
         val eventsObserver = Observer<CalendarResponse<MutableList<CalendarEvent>>> {
-            adapter.setData(it!!.data!!)
+            adapter.setData(it!!.data)
+            Toast.makeText(this, it.status, Toast.LENGTH_LONG).show()
         }
         viewModelImpl.events.observe(this, eventsObserver)
     }

@@ -31,9 +31,9 @@ class ViewModelImpl : BaseViewModel() {
             .observeOn(AndroidSchedulers.mainThread())
             .doOnError { println("Error") }
             .subscribe({
-                events.value = CalendarResponse.success(it.data)
+                events.value = CalendarResponse.success(it)
             }, { t: Throwable? ->
-                events.value = CalendarResponse.error(null, t?.message)
+                events.value = CalendarResponse.error(mutableListOf(), t?.message)
                 println("Error: " + t?.message + t?.printStackTrace())
             })
     }

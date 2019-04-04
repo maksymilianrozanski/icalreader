@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
-import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -13,13 +12,16 @@ class ModelImpl @Inject constructor(val apiService: APIService, val iCalReader: 
         return Observable.just("some text" + System.currentTimeMillis())
     }
 
-    //TODO: add checking response code, and error handling
-    override fun requestEvents(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
-        return apiService.getResponse().map { t ->
-            println(t.code())
-            val iCalString = t.body()!!.string()
-            val events = iCalReader.getCalendarEvents(iCalString)
-            CalendarResponse.success(events as MutableList<CalendarEvent>)
+    override fun requestEvents(): Observable<MutableList<CalendarEvent>> {
+        return apiService.getResponse().map {
+            if (it.code() == 200) {
+                val iCalString = it.body()!!.string()
+                val events = iCalReader.getCalendarEvents(iCalString)
+                events as MutableList<CalendarEvent>
+            } else {
+                println("Throwing exception, code: ${it.code()}")
+                throw Exception("Response code: ${it.code()}")
+            }
         }
     }
 }

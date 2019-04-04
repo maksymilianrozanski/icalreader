@@ -51,7 +51,7 @@ class ModelImplTest {
         val obtainedResult = arrayListOf<CalendarEvent>()
 
         val model = ModelImpl(apiService, iCalReader)
-        model.requestEvents().subscribe { obtainedResult.addAll(it.data as Iterable<CalendarEvent>) }
+        model.requestEvents().subscribe { obtainedResult.addAll(it as Iterable<CalendarEvent>) }
 
         val recordedRequest = server.takeRequest()
         Assert.assertTrue(recordedRequest.method == "GET")
