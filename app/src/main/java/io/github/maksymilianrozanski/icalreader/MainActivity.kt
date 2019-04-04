@@ -41,9 +41,13 @@ class MainActivity : AppCompatActivity() {
         recyclerViewId.adapter = adapter
 
         val eventsObserver = Observer<CalendarResponse<MutableList<CalendarEvent>>> {
-            adapter.setData(it!!.data)
+            if (it!!.data.isNotEmpty()){
+                adapter.setData(it.data)
+            }
             Toast.makeText(this, it.status, Toast.LENGTH_LONG).show()
         }
         viewModelImpl.events.observe(this, eventsObserver)
+
+        floatingRefreshButton.setOnClickListener { viewModelImpl.requestEvents() }
     }
 }

@@ -24,7 +24,7 @@ class ViewModelImpl : BaseViewModel() {
         requestEvents()
     }
 
-    private fun requestEvents() {
+    fun requestEvents() {
         subscription = model
             .requestEvents()
             .subscribeOn(Schedulers.io())
