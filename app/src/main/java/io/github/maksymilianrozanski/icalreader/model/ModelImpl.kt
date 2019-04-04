@@ -20,8 +20,10 @@ class ModelImpl @Inject constructor(val apiService: APIService, val iCalReader: 
                 events as MutableList<CalendarEvent>
             } else {
                 println("Throwing exception, code: ${it.code()}")
-                throw Exception("Response code: ${it.code()}")
+                throw RequestFailedException("Response code: ${it.code()}")
             }
         }
     }
 }
+
+class RequestFailedException(message: String) : Exception(message)
