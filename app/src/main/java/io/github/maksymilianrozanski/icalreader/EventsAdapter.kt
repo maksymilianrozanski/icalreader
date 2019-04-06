@@ -38,8 +38,8 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
 
         fun bindViews(event: CalendarEvent) {
             eventTitle.text = event.title
-            eventDateStart.text = event.dateStart
-            eventDateEnd.text = event.dateEnd
+            eventDateStart.text = event.dateStart.toString()
+            eventDateEnd.text = event.dateEnd.toString()
             eventDescription.text = event.description
             eventLocation.text = event.location
         }

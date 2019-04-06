@@ -11,6 +11,7 @@ import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert
 import org.junit.Test
 import org.mockito.Mockito
+import java.util.*
 import kotlin.test.assertEquals
 
 class ModelImplTest {
@@ -33,15 +34,16 @@ class ModelImplTest {
         val mockedEvents = listOf(
             CalendarEvent(
                 "Informatyka Lab",
-                "01 Jan 2000 12:00",
-                "01 Jan 2000 13:00",
+                //TODO: replace deprecated Date()
+                Date(2000, 1, 1, 12, 0),
+                Date(2000, 1, 1, 13, 0),
                 "Classroom 12",
                 "Kraków"
             ),
             CalendarEvent(
                 "Historia",
-                "01 Jan 2000 15:00",
-                "01 Jan 2000 16:30",
+                Date(2000, 1, 1, 15, 0),
+                Date(2000,1,1,16,30),
                 "Classroom 13",
                 "Kraków"
             )

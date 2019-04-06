@@ -28,11 +28,11 @@ class ICalReaderImpl : ICalReader {
             if (it.getProperty<Property>(Property.SUMMARY) != null) {
                 title = it.getProperty<Property>(Property.SUMMARY).value
             }
-            val start: String
-            val end: String
+            val start: Date
+            val end: Date
             if (it.getProperty<Property>(Property.DTSTART) != null && it.getProperty<Property>(Property.DTEND) != null) {
-                start = toWarsawTimeZone(it.getProperty<Property>(Property.DTSTART).value).toString()
-                end = toWarsawTimeZone(it.getProperty<Property>(Property.DTEND).value).toString()
+                start = toWarsawTimeZone(it.getProperty<Property>(Property.DTSTART).value)
+                end = toWarsawTimeZone(it.getProperty<Property>(Property.DTEND).value)
             } else {
                 throw ValidationException(
                     "DTSTART or DTEND property not available. isNull: DTSTART:${
@@ -55,9 +55,7 @@ class ICalReaderImpl : ICalReader {
             }
 
             calendarEvents.add(
-                CalendarEvent(
-                    title, start, end, description, location
-                )
+                CalendarEvent(title, start, end, description, location)
             )
         }
         return calendarEvents
@@ -66,6 +64,6 @@ class ICalReaderImpl : ICalReader {
 
 fun toWarsawTimeZone(input: String): Date {
     val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
-    val date =  dateFormat.parse(input)
+    val date = dateFormat.parse(input)
     return DateUtils.addHours(date, 1)
 }

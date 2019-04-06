@@ -30,13 +30,12 @@ class ICalReaderTest {
         val indexZeroEvent = output[0]
 
         assertTrue(indexZeroEvent.title == "Bastille Day Party")
-        println(indexZeroEvent.dateEnd)
-        assertTrue(indexZeroEvent.dateStart.contains("1997"))
-        assertTrue(indexZeroEvent.dateStart.contains("Jul 14"))
-        assertTrue(indexZeroEvent.dateStart.contains("18:00"))
-        assertTrue(indexZeroEvent.dateEnd.contains("1997"))
-        assertTrue(indexZeroEvent.dateEnd.contains("Jul 15"))
-        assertTrue(indexZeroEvent.dateEnd.contains("04:59"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("1997"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("Jul 14"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("18:00"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("1997"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("Jul 15"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("04:59"))
         assertTrue(indexZeroEvent.description == "This is example event description.")
         assertTrue(indexZeroEvent.location == "Warsaw")
     }
@@ -62,12 +61,12 @@ class ICalReaderTest {
         val indexZeroEvent = output[0]
 
         assertTrue(indexZeroEvent.title == "")
-        assertTrue(indexZeroEvent.dateStart.contains("1997"))
-        assertTrue(indexZeroEvent.dateStart.contains("Jul 14"))
-        assertTrue(indexZeroEvent.dateStart.contains("18:00"))
-        assertTrue(indexZeroEvent.dateEnd.contains("1997"))
-        assertTrue(indexZeroEvent.dateEnd.contains("Jul 15"))
-        assertTrue(indexZeroEvent.dateEnd.contains("04:59"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("1997"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("Jul 14"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("18:00"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("1997"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("Jul 15"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("04:59"))
         assertTrue(indexZeroEvent.description == "")
         assertTrue(indexZeroEvent.location == "")
     }
