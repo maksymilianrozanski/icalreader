@@ -22,4 +22,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:src="@android:drawable/ic_popup_sync"
             android:layout_margin="12dp"/>
+
+    <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/recyclerViewId"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/recyclerViewId"
+            app:layout_constraintTop_toTopOf="@+id/recyclerViewId"/>
+
 </android.support.constraint.ConstraintLayout>

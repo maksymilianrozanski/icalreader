@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.view.View
 import android.widget.Toast
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
@@ -41,8 +42,12 @@ class MainActivity : AppCompatActivity() {
         recyclerViewId.adapter = adapter
 
         val eventsObserver = Observer<CalendarResponse<MutableList<CalendarEvent>>> {
-            if (it!!.data.isNotEmpty()){
+            if (it!!.data.isNotEmpty()) {
                 adapter.setData(it.data)
+            }
+            when (it.status) {
+                "Loading" -> progressBar.visibility = View.VISIBLE
+                else -> progressBar.visibility = View.GONE
             }
             Toast.makeText(this, it.status, Toast.LENGTH_LONG).show()
         }
