@@ -31,19 +31,28 @@ class ModelImplTest {
         val networkModule = NetworkTestModule(server.url("/").toString())
         val apiService = networkModule.provideApi()
 
+        val calendar = Calendar.getInstance()
+        calendar.set(2000, 1, 1, 12, 0)
+        val dateStart1 = calendar.time
+        calendar.set(2000, 1, 1, 13, 0)
+        val dateEnd1 = calendar.time
+        calendar.set(2000, 1, 1, 15, 0)
+        val dateStart2 = calendar.time
+        calendar.set(2000, 1, 1, 16, 30)
+        val dateEnd2 = calendar.time
+
         val mockedEvents = listOf(
             CalendarEvent(
                 "Informatyka Lab",
-                //TODO: replace deprecated Date()
-                Date(2000, 1, 1, 12, 0),
-                Date(2000, 1, 1, 13, 0),
+                dateStart1,
+                dateEnd1,
                 "Classroom 12",
                 "Kraków"
             ),
             CalendarEvent(
                 "Historia",
-                Date(2000, 1, 1, 15, 0),
-                Date(2000,1,1,16,30),
+                dateStart2,
+                dateEnd2,
                 "Classroom 13",
                 "Kraków"
             )
