@@ -1,12 +1,12 @@
 package io.github.maksymilianrozanski.icalreader
 
-import android.support.test.InstrumentationRegistry
-import android.support.test.espresso.Espresso.onView
-import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.espresso.contrib.RecyclerViewActions.scrollToPosition
-import android.support.test.espresso.matcher.ViewMatchers.*
-import android.support.test.rule.ActivityTestRule
-import android.support.v7.widget.RecyclerView
+import androidx.test.InstrumentationRegistry
+import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
+import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.rule.ActivityTestRule
+import androidx.recyclerview.widget.RecyclerView
 import io.github.maksymilianrozanski.icalreader.component.DaggerTestAppComponent
 import io.github.maksymilianrozanski.icalreader.module.AppModule
 import io.github.maksymilianrozanski.icalreader.module.NetworkModule
@@ -54,7 +54,7 @@ class MainActivityTest {
     fun integrationTest() {
         activityRule.launchActivity(null)
         Thread.sleep(500)
-        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<RecyclerView.ViewHolder>(0))
+        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(0))
             .check(matches(atPosition(0, hasDescendant(withText("Informatyka Lab")))))
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(0, hasDescendant(withText(containsString("14:40"))))))
@@ -72,7 +72,7 @@ class MainActivityTest {
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(0, hasDescendant(withText(containsString("św. Filipa 17 Kraków"))))))
 
-        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<RecyclerView.ViewHolder>(1))
+        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(1))
             .check(matches(atPosition(1, hasDescendant(withText("Historia Wyk")))))
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(1, hasDescendant(withText(containsString("08:00"))))))
@@ -90,7 +90,7 @@ class MainActivityTest {
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(1, hasDescendant(withText(containsString("św. Filipa 17 Kraków"))))))
 
-        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<RecyclerView.ViewHolder>(2))
+        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(2))
             .check(matches(atPosition(2, hasDescendant(withText("Chemia")))))
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(2, hasDescendant(withText(containsString("16:20"))))))
@@ -108,7 +108,7 @@ class MainActivityTest {
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(2, hasDescendant(withText(containsString("św. Filipa 17 Kraków"))))))
 
-        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<RecyclerView.ViewHolder>(3))
+        onView(withId(R.id.recyclerViewId)).perform(scrollToPosition<androidx.recyclerview.widget.RecyclerView.ViewHolder>(3))
             .check(matches(atPosition(3, hasDescendant(withText("Biologia Ćw")))))
         onView(withId(R.id.recyclerViewId))
             .check(matches(atPosition(3, hasDescendant(withText(containsString("08:00"))))))

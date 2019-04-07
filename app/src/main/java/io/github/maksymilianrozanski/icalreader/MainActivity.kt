@@ -1,13 +1,11 @@
 package io.github.maksymilianrozanski.icalreader
 
-import android.arch.lifecycle.Observer
-import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
@@ -22,7 +20,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var viewModelImpl: ViewModelImpl
-    private lateinit var layoutManager: RecyclerView.LayoutManager
+    private lateinit var layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
     private lateinit var adapter: EventsAdapter
 
     lateinit var appComponent: AppComponent
@@ -35,7 +33,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModelImpl = ViewModelProviders.of(this, viewModelFactory).get(ViewModelImpl::class.java)
-        layoutManager = LinearLayoutManager(this)
+        layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
         adapter = EventsAdapter(this, viewModelImpl.events.value?.data ?: mutableListOf())
 
         recyclerViewId.layoutManager = layoutManager

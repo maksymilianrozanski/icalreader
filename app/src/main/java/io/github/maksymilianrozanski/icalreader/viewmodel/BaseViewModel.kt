@@ -1,6 +1,6 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
-import android.arch.lifecycle.ViewModel
+import androidx.lifecycle.ViewModel
 
 abstract class BaseViewModel : ViewModel() {
     private val injector: ViewModelInjector = DaggerViewModelInjector.builder()

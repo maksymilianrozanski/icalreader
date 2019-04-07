@@ -1,6 +1,6 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
-import android.arch.lifecycle.MutableLiveData
+import androidx.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
 import io.github.maksymilianrozanski.icalreader.model.Model

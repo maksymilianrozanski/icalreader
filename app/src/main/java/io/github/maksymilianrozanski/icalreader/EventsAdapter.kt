@@ -1,7 +1,7 @@
 package io.github.maksymilianrozanski.icalreader
 
 import android.content.Context
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +9,7 @@ import android.widget.TextView
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 
 class EventsAdapter(private val context: Context, private var list: MutableList<CalendarEvent>) :
-    RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
+    androidx.recyclerview.widget.RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(partent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.event_list_row, partent, false)
@@ -29,7 +29,7 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
         var eventTitle = itemView.findViewById(R.id.eventTitleTextView) as TextView
         var eventDateStart = itemView.findViewById(R.id.eventDateStartTextView) as TextView
         var eventDateEnd = itemView.findViewById(R.id.eventDateEndTextView) as TextView
