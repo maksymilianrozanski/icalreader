@@ -1,5 +1,6 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
+import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
@@ -9,7 +10,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
-class ViewModelImpl : BaseViewModel() {
+class ViewModelImpl(application: Application) : BaseViewModel(application) {
 
     @Inject
     lateinit var model: Model

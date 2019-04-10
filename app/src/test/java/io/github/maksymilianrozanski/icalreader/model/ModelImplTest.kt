@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.timeout
 import io.github.maksymilianrozanski.icalreader.TestHelper
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.github.maksymilianrozanski.icalreader.module.NetworkTestModule
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -43,25 +44,27 @@ class ModelImplTest {
 
         val mockedEvents = listOf(
             CalendarEvent(
-                "Informatyka Lab",
-                dateStart1,
-                dateEnd1,
-                "Classroom 12",
-                "Kraków"
+                title = "Informatyka Lab",
+                dateStart = dateStart1,
+                dateEnd = dateEnd1,
+                description = "Classroom 12",
+                location = "Kraków"
             ),
             CalendarEvent(
-                "Historia",
-                dateStart2,
-                dateEnd2,
-                "Classroom 13",
-                "Kraków"
+                title = "Historia",
+                dateStart = dateStart2,
+                dateEnd = dateEnd2,
+                description = "Classroom 13",
+                location = "Kraków"
             )
         )
         val iCalReader = Mockito.mock(ICalReader::class.java)
         Mockito.`when`(iCalReader.getCalendarEvents(any())).thenReturn(mockedEvents)
         val obtainedResult = arrayListOf<CalendarEvent>()
 
-        val model = ModelImpl(apiService, iCalReader)
+        val dataSource = Mockito.mock(EventDao::class.java)
+
+        val model = ModelImpl(apiService, iCalReader, dataSource)
         model.requestEvents().subscribe { obtainedResult.addAll(it as Iterable<CalendarEvent>) }
 
         val recordedRequest = server.takeRequest()
@@ -84,8 +87,9 @@ class ModelImplTest {
         val networkModule = NetworkTestModule(server.url("/").toString())
         val apiService = networkModule.provideApi()
         val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
 
-        val model = ModelImpl(apiService, iCalReader)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
 
         val testObserver = model.requestEvents().test()
         testObserver.awaitTerminalEvent()

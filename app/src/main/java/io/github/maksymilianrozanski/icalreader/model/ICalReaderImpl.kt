@@ -55,7 +55,10 @@ class ICalReaderImpl : ICalReader {
             }
 
             calendarEvents.add(
-                CalendarEvent(title, start, end, description, location)
+                CalendarEvent(
+                    title = title, dateStart = start, dateEnd = end, description = description,
+                    location = location
+                )
             )
         }
         return calendarEvents

@@ -1,6 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.module
 
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import dagger.MapKey
 import dagger.Module
@@ -27,7 +28,7 @@ class ViewModelModule {
     @Provides
     @IntoMap
     @ViewModelKey(ViewModelImpl::class)
-    internal fun viewModelImpl(): ViewModel {
-        return ViewModelImpl()
+    internal fun viewModelImpl(application:Application): ViewModel {
+        return ViewModelImpl(application)
     }
 }

@@ -10,7 +10,7 @@ import io.github.maksymilianrozanski.icalreader.module.*
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, ViewModelModule::class, NetworkModule::class, ModelImplModule::class, ICalReaderModule::class])
+@Component(modules = [AppModule::class, ViewModelModule::class, NetworkModule::class, ModelImplModule::class, ICalReaderModule::class, DatabaseModule::class])
 interface AppComponent {
 
     fun inject(myApp: MyApp)

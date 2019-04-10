@@ -2,10 +2,15 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.reactivex.Observable
 import javax.inject.Inject
 
-class ModelImpl @Inject constructor(val apiService: APIService, val iCalReader: ICalReader) : Model {
+class ModelImpl @Inject constructor(
+    val apiService: APIService,
+    val iCalReader: ICalReader,
+    val dataSource: EventDao
+) : Model {
 
     override fun requestData(): Observable<String> {
         Thread.sleep(1000)
@@ -23,6 +28,14 @@ class ModelImpl @Inject constructor(val apiService: APIService, val iCalReader: 
                 throw RequestFailedException("Response code: ${it.code()}")
             }
         }
+    }
+
+    private fun loadEventsFromDatabase(): List<CalendarEvent> {
+        return dataSource.getAllEvents()
+    }
+
+    private fun saveEventsToDatabase(events: List<CalendarEvent>) {
+        events.forEach { dataSource.insertEvent(it) }
     }
 }
 
