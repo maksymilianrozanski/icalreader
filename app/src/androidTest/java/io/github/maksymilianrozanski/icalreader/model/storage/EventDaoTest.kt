@@ -36,11 +36,10 @@ class EventDaoTest {
 
     @Test
     fun insertAndGetSingleEvent() {
-        //TODO: replace deprecated Date constructor
         val event = CalendarEvent(
             title = "Example event title",
-            dateStart = Date(2012, 3, 3, 10, 20, 20),
-            dateEnd = Date(2012, 4, 4, 12, 20, 20),
+            dateStart = Date(1554883200L),
+            dateEnd = Date(1554907018L),
             description = "example description",
             location = "example location"
         )
@@ -56,8 +55,8 @@ class EventDaoTest {
     fun deleteEvents() {
         val event = CalendarEvent(
             title = "Example event title",
-            dateStart = Date(2012, 3, 3, 10, 20, 20),
-            dateEnd = Date(2012, 4, 4, 12, 20, 20),
+            dateStart = Date(1554883200L),
+            dateEnd = Date(1554907018L),
             description = "example description",
             location = "example location"
         )
