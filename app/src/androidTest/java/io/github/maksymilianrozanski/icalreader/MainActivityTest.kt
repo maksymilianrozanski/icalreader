@@ -6,7 +6,6 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
-import androidx.recyclerview.widget.RecyclerView
 import io.github.maksymilianrozanski.icalreader.component.DaggerTestAppComponent
 import io.github.maksymilianrozanski.icalreader.module.AppModule
 import io.github.maksymilianrozanski.icalreader.module.NetworkModule
@@ -26,6 +25,7 @@ class MainActivityTest {
     lateinit var server: MockWebServer
     lateinit var app: MyApp
 
+    //TODO: replace usage of real database
     @Before
     fun setUp() {
         server = MockWebServer()

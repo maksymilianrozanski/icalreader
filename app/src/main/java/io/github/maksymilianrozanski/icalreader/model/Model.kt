@@ -6,7 +6,5 @@ import io.reactivex.Observable
 
 interface Model {
 
-    fun requestEvents(): Observable<MutableList<CalendarEvent>>
-
     fun requestCalendarResponse(): Observable<CalendarResponse<MutableList<CalendarEvent>>>
 }

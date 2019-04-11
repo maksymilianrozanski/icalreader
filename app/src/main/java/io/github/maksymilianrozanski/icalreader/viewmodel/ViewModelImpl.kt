@@ -25,21 +25,6 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
         requestCalendarResponse()
     }
 
-    fun requestEvents() {
-        subscription = model
-            .requestEvents()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { events.value = CalendarResponse.loading(mutableListOf()) }
-            .doOnError { println("Error") }
-            .subscribe({
-                events.value = CalendarResponse.success(it)
-            }, { t: Throwable? ->
-                events.value = CalendarResponse.error(mutableListOf(), t?.message)
-                println("Error: " + t?.message + t?.printStackTrace())
-            })
-    }
-
     fun requestCalendarResponse() {
         subscription = model.requestCalendarResponse()
             .subscribeOn(Schedulers.io())

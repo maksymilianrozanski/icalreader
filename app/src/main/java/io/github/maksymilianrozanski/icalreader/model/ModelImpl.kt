@@ -13,19 +13,6 @@ class ModelImpl @Inject constructor(
     val dataSource: EventDao
 ) : Model {
 
-    override fun requestEvents(): Observable<MutableList<CalendarEvent>> {
-        return apiService.getResponse().map {
-            if (it.code() == 200) {
-                val iCalString = it.body()!!.string()
-                val events = iCalReader.getCalendarEvents(iCalString)
-                events as MutableList<CalendarEvent>
-            } else {
-                println("Throwing exception, code: ${it.code()}")
-                throw RequestFailedException("Response code: ${it.code()}")
-            }
-        }
-    }
-
     override fun requestCalendarResponse(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
         return Observable.concatArray(loadEventsFromDatabase(),
             requestCalendarResponseFromApi().doOnNext {
@@ -62,5 +49,3 @@ class ModelImpl @Inject constructor(
         dataSource.insertEventsList(events)
     }
 }
-
-class RequestFailedException(message: String) : Exception(message)
