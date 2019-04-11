@@ -51,6 +51,6 @@ class MainActivity : AppCompatActivity() {
         }
         viewModelImpl.events.observe(this, eventsObserver)
 
-        floatingRefreshButton.setOnClickListener { viewModelImpl.requestEvents() }
+        floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
     }
 }

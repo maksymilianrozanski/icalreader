@@ -22,7 +22,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
     private lateinit var subscription: Disposable
 
     init {
-        requestEvents()
+        requestCalendarResponse()
     }
 
     fun requestEvents() {
@@ -38,6 +38,18 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
                 events.value = CalendarResponse.error(mutableListOf(), t?.message)
                 println("Error: " + t?.message + t?.printStackTrace())
             })
+    }
+
+    fun requestCalendarResponse() {
+        subscription = model.requestCalendarResponse()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { events.value = CalendarResponse.loading(mutableListOf()) }
+            .doOnError { println("Error") }
+            .subscribe {
+                events.value = it
+            }
+
     }
 
     override fun onCleared() {
