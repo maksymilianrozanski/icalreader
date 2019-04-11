@@ -32,6 +32,15 @@ class ModelImpl @Inject constructor(
     }
 
     override fun requestCalendarResponse(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+        return Observable.concatArray(loadEventsFromDatabase(),
+            requestCalendarResponseFromApi().doOnNext {
+                if (it.status == "Success") {
+                    replaceSavedEvents(it.data)
+                }
+            })
+    }
+
+    fun requestCalendarResponseFromApi(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
         return apiService.getResponse().map {
             if (it.code() == 200 && it.body() != null) {
                 val iCalString = it.body()!!.string()
@@ -53,7 +62,8 @@ class ModelImpl @Inject constructor(
         }.toObservable()
     }
 
-    private fun saveEventsToDatabase(events: List<CalendarEvent>) {
+    private fun replaceSavedEvents(events: List<CalendarEvent>) {
+        dataSource.deleteAllEvents()
         dataSource.insertEventsList(events)
     }
 }

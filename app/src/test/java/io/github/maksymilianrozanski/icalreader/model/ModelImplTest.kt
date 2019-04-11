@@ -141,7 +141,7 @@ class ModelImplTest {
         val dataSource = Mockito.mock(EventDao::class.java)
         val model = ModelImpl(apiService, iCalReader, dataSource)
 
-        model.requestCalendarResponse().test().await().assertNoErrors().assertValue {
+        model.requestCalendarResponseFromApi().test().await().assertNoErrors().assertValue {
             it.status == "Success" && it.data == mockedEvents
         }
 
@@ -168,7 +168,7 @@ class ModelImplTest {
 
         val model = ModelImpl(apiService, iCalReader, dataSource)
 
-        model.requestCalendarResponse().test().await().assertNoErrors().assertValue {
+        model.requestCalendarResponseFromApi().test().await().assertNoErrors().assertValue {
             it.status == "Error" && it.message == "500"
         }
 
