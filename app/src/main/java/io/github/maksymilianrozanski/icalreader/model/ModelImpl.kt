@@ -54,7 +54,7 @@ class ModelImpl @Inject constructor(
     }
 
     private fun saveEventsToDatabase(events: List<CalendarEvent>) {
-        events.forEach { dataSource.insertEvent(it) }
+        dataSource.insertEventsList(events)
     }
 }
 

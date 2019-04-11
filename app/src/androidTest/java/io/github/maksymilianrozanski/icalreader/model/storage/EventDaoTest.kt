@@ -70,7 +70,7 @@ class EventDaoTest {
 
     @Test
     fun getAllEventsSingleTest(){
-        val event = CalendarEvent(
+        val eventOne = CalendarEvent(
             title = "Example event title",
             dateStart = Date(1554883200L),
             dateEnd = Date(1554907018L),
@@ -78,9 +78,19 @@ class EventDaoTest {
             location = "example location"
         )
 
-        database.eventDao().insertEvent(event)
+        val eventTwo = CalendarEvent(
+            title = "Second example title",
+            dateStart = Date(1554990258504L),
+            dateEnd = Date(1554990267619L),
+            description = "Second example description",
+            location = "Second example location"
+        )
+
+        val events = listOf(eventOne, eventTwo)
+
+        database.eventDao().insertEventsList(events)
 
         database.eventDao().getAllEventsSingle().test()
-            .assertValue { it[0] == event }
+            .assertValue { it.containsAll(events) && events.containsAll(it)}
     }
 }
