@@ -25,7 +25,6 @@ class MainActivityTest {
     lateinit var server: MockWebServer
     lateinit var app: MyApp
 
-    //TODO: replace usage of real database
     @Before
     fun setUp() {
         server = MockWebServer()
