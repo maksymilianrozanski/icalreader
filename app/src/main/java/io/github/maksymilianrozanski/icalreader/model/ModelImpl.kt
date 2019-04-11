@@ -35,8 +35,8 @@ class ModelImpl @Inject constructor(
         return apiService.getResponse().map {
             if (it.code() == 200 && it.body() != null) {
                 val iCalString = it.body()!!.string()
-                val events = iCalReader.getCalendarEvents(iCalString)
-                val successResponse = CalendarResponse.success(events) as CalendarResponse<MutableList<CalendarEvent>>
+                val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
+                val successResponse = CalendarResponse.success(events)
                 successResponse
             } else {
                 val errorResponse =
