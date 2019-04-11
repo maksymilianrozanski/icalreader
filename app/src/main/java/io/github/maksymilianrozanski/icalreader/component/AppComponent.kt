@@ -23,4 +23,5 @@ interface AppComponent {
 
     fun getApplication(): Application
 
+    fun getModel(): Model
 }

@@ -1,11 +1,11 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import dagger.Component
-import io.github.maksymilianrozanski.icalreader.module.*
-import javax.inject.Singleton
+import io.github.maksymilianrozanski.icalreader.annotation.ViewModelScope
+import io.github.maksymilianrozanski.icalreader.component.AppComponent
 
-@Singleton
-@Component(modules = [AppModule::class, NetworkModule::class, ModelImplModule::class, ICalReaderModule::class, DatabaseModule::class])
+@ViewModelScope
+@Component(dependencies = [AppComponent::class])
 interface ViewModelInjector {
     /**
      * Injects required dependencies into the specified ViewModelImpl.
@@ -16,8 +16,6 @@ interface ViewModelInjector {
     @Component.Builder
     interface Builder {
         fun build(): ViewModelInjector
-
-        fun appModule(appModule: AppModule):Builder
-        fun modelImplModule(modelImplModule: ModelImplModule): Builder
+        fun appComponent(appComponent: AppComponent): Builder
     }
 }
