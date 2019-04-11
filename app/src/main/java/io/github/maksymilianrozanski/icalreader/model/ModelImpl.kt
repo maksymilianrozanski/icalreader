@@ -13,11 +13,6 @@ class ModelImpl @Inject constructor(
     val dataSource: EventDao
 ) : Model {
 
-    override fun requestData(): Observable<String> {
-        Thread.sleep(1000)
-        return Observable.just("some text" + System.currentTimeMillis())
-    }
-
     override fun requestEvents(): Observable<MutableList<CalendarEvent>> {
         return apiService.getResponse().map {
             if (it.code() == 200) {
