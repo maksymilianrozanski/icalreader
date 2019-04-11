@@ -67,4 +67,20 @@ class EventDaoTest {
         val events = database.eventDao().getAllEvents()
         Assert.assertTrue(events.isEmpty())
     }
+
+    @Test
+    fun getAllEventsSingleTest(){
+        val event = CalendarEvent(
+            title = "Example event title",
+            dateStart = Date(1554883200L),
+            dateEnd = Date(1554907018L),
+            description = "example description",
+            location = "example location"
+        )
+
+        database.eventDao().insertEvent(event)
+
+        database.eventDao().getAllEventsSingle().test()
+            .assertValue { it[0] == event }
+    }
 }

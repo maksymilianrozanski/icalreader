@@ -46,8 +46,11 @@ class ModelImpl @Inject constructor(
         }
     }
 
-    private fun loadEventsFromDatabase(): List<CalendarEvent> {
-        return dataSource.getAllEvents()
+    private fun loadEventsFromDatabase(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+        return dataSource.getAllEventsSingle().map { it ->
+            val calendarResponse = CalendarResponse.success(it.toMutableList())
+            calendarResponse
+        }.toObservable()
     }
 
     private fun saveEventsToDatabase(events: List<CalendarEvent>) {
