@@ -19,7 +19,7 @@ class ModelImpl @Inject constructor(
                 if (it.status == "Success") {
                     replaceSavedEvents(it.data)
                 }
-            })
+            }).onErrorReturnItem(CalendarResponse.error(mutableListOf(), "Other exception"))
     }
 
     fun requestCalendarResponseFromApi(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
@@ -30,9 +30,7 @@ class ModelImpl @Inject constructor(
                 val successResponse = CalendarResponse.success(events)
                 successResponse
             } else {
-                val errorResponse =
-                    CalendarResponse.error(null, it.code().toString()) as CalendarResponse<MutableList<CalendarEvent>>
-                errorResponse
+                CalendarResponse.error(mutableListOf(), it.code().toString())
             }
         }
     }

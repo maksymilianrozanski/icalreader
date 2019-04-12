@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity() {
         recyclerViewId.adapter = adapter
 
         val eventsObserver = Observer<CalendarResponse<MutableList<CalendarEvent>>> {
-            if (it!!.data.isNotEmpty()) {
+            if (it?.data != null && it.data.isNotEmpty()) {
                 adapter.setData(it.data)
             }
             when (it.status) {
