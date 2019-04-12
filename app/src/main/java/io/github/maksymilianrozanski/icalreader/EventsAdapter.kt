@@ -1,12 +1,12 @@
 package io.github.maksymilianrozanski.icalreader
 
 import android.content.Context
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import java.util.*
 
 class EventsAdapter(private val context: Context, private var list: MutableList<CalendarEvent>) :
     androidx.recyclerview.widget.RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
@@ -43,5 +43,16 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
             eventDescription.text = event.description
             eventLocation.text = event.location
         }
+    }
+
+    fun getPositionOfFirstNotFinishedEvent(): Int {
+        val calendar = Calendar.getInstance()
+        val currentTime = calendar.time
+        for (index in list.indices){
+            if (list[index].dateEnd > currentTime){
+                return index
+            }
+        }
+        return 0
     }
 }

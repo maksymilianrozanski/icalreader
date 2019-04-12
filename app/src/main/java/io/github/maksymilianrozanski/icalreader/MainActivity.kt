@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
                 "Success" -> {
                     progressBar.isIndeterminate = false
                     progressBar.progressBackgroundTintList = ColorStateList.valueOf(Color.GREEN)
+                    scrollToMostRecent()
                 }
                 else -> {
                     progressBar.isIndeterminate = false
@@ -63,5 +65,12 @@ class MainActivity : AppCompatActivity() {
         viewModelImpl.events.observe(this, eventsObserver)
 
         floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
+    }
+
+    private fun scrollToMostRecent() {
+        (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+            adapter.getPositionOfFirstNotFinishedEvent(),
+            0
+        )
     }
 }
