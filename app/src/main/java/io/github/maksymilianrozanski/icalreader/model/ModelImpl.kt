@@ -13,14 +13,18 @@ class ModelImpl @Inject constructor(
     val dataSource: EventDao
 ) : Model {
 
-    override fun requestCalendarResponse(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
-        return Observable.concatArray(loadEventsFromDatabase(),
+    override fun requestNewData(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+        return Observable.concatArray(
             Observable.just(CalendarResponse.loading(mutableListOf())),
             requestCalendarResponseFromApi().doOnNext {
                 if (it.status == "Success") {
                     replaceSavedEvents(it.data)
                 }
             }).onErrorReturnItem(CalendarResponse.error(mutableListOf(), "Other exception"))
+    }
+
+    override fun requestSavedData(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+        return loadEventsFromDatabase()
     }
 
     fun requestCalendarResponseFromApi(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {

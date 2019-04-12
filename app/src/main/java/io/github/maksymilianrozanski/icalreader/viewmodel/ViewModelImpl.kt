@@ -22,11 +22,20 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
     private lateinit var subscription: Disposable
 
     init {
-        requestCalendarResponse()
+        requestSavedData()
+    }
+
+    private fun requestSavedData() {
+        subscription = model.requestSavedData()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe {
+                events.value = it
+            }
     }
 
     fun requestCalendarResponse() {
-        subscription = model.requestCalendarResponse()
+        subscription = model.requestNewData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { events.value = CalendarResponse.loading(mutableListOf()) }
@@ -34,7 +43,6 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
             .subscribe {
                 events.value = it
             }
-
     }
 
     override fun onCleared() {
