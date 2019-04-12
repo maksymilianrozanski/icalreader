@@ -13,7 +13,7 @@ interface EventDao {
     @Query("SELECT * FROM events")
     fun getAllEvents(): List<CalendarEvent>
 
-    @Query("SELECT * FROM events")
+    @Query("SELECT * FROM events ORDER BY datestart")
     fun getAllEventsSingle(): Single<List<CalendarEvent>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

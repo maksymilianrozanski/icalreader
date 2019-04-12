@@ -69,28 +69,37 @@ class EventDaoTest {
     }
 
     @Test
-    fun getAllEventsSingleTest(){
-        val eventOne = CalendarEvent(
+    fun getAllEventsSingleTest() {
+
+        val oldestEvent = CalendarEvent(
             title = "Example event title",
-            dateStart = Date(1554883200L),
-            dateEnd = Date(1554907018L),
+            dateStart = Date(915181810000L),
+            dateEnd = Date(915199810000L),
             description = "example description",
             location = "example location"
         )
 
-        val eventTwo = CalendarEvent(
-            title = "Second example title",
+        val middleEvent = CalendarEvent(
+            title = "Other example event title",
+            dateStart = Date(946735810000L),
+            dateEnd = Date(946761010000L),
+            description = "example description",
+            location = "example location"
+        )
+
+        val mostRecentEvent = CalendarEvent(
+            title = "Another example title",
             dateStart = Date(1554990258504L),
             dateEnd = Date(1554990267619L),
             description = "Second example description",
             location = "Second example location"
         )
 
-        val events = listOf(eventOne, eventTwo)
+        val unsortedEvents = listOf(middleEvent, oldestEvent, mostRecentEvent)
 
-        database.eventDao().insertEventsList(events)
+        database.eventDao().insertEventsList(unsortedEvents)
 
         database.eventDao().getAllEventsSingle().test()
-            .assertValue { it.containsAll(events) && events.containsAll(it)}
+            .assertValue { it == unsortedEvents.sortedBy(CalendarEvent::dateStart) }
     }
 }
