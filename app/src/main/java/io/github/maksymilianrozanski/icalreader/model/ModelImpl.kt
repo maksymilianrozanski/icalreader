@@ -32,6 +32,7 @@ class ModelImpl @Inject constructor(
             if (it.code() == 200 && it.body() != null) {
                 val iCalString = it.body()!!.string()
                 val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
+                events.sortBy(CalendarEvent::dateStart)
                 val successResponse = CalendarResponse.success(events)
                 successResponse
             } else {

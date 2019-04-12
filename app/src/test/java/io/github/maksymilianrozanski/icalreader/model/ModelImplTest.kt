@@ -32,27 +32,38 @@ class ModelImplTest {
         val apiService = networkModule.provideApi()
 
         val calendar = Calendar.getInstance()
-        calendar.set(2000, 1, 1, 12, 0)
-        val dateStart1 = calendar.time
-        calendar.set(2000, 1, 1, 13, 0)
-        val dateEnd1 = calendar.time
         calendar.set(2000, 1, 1, 15, 0)
-        val dateStart2 = calendar.time
+        val newestEventDateStart = calendar.time
         calendar.set(2000, 1, 1, 16, 30)
-        val dateEnd2 = calendar.time
+        val newestEventDateEnd = calendar.time
+        calendar.set(2000, 1, 1, 12, 0)
+        val middleEventDateStart = calendar.time
+        calendar.set(2000, 1, 1, 13, 0)
+        val middleEventDateEnd = calendar.time
+        calendar.set(1999, 2, 2, 12, 20)
+        val oldestEventDateStart = calendar.time
+        calendar.set(1999, 2, 2, 14, 40)
+        val oldestEventDateEnd = calendar.time
 
         val mockedEvents = listOf(
             CalendarEvent(
                 title = "Informatyka Lab",
-                dateStart = dateStart1,
-                dateEnd = dateEnd1,
+                dateStart = middleEventDateStart,
+                dateEnd = middleEventDateEnd,
                 description = "Classroom 12",
                 location = "Kraków"
             ),
             CalendarEvent(
+                title = "Chemia",
+                dateStart = oldestEventDateStart,
+                dateEnd = oldestEventDateEnd,
+                description = "Classroom14",
+                location = "Kraków"
+            ),
+            CalendarEvent(
                 title = "Historia",
-                dateStart = dateStart2,
-                dateEnd = dateEnd2,
+                dateStart = newestEventDateStart,
+                dateEnd = newestEventDateEnd,
                 description = "Classroom 13",
                 location = "Kraków"
             )
@@ -63,7 +74,9 @@ class ModelImplTest {
         val model = ModelImpl(apiService, iCalReader, dataSource)
 
         model.requestCalendarResponseFromApi().test().await().assertNoErrors().assertValue {
-            it.status == "Success" && it.data == mockedEvents
+            it.status == "Success"
+                    //should be sorted by date start from oldest (eg. 1999) to most recent (eg. 2019)
+                    && it.data[0] == mockedEvents[1] && it.data[1] == mockedEvents[0] && it.data[2] == mockedEvents[2]
         }
 
         val recordedRequest = server.takeRequest()
