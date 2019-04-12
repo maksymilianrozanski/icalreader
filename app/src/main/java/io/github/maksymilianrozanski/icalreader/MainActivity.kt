@@ -1,7 +1,8 @@
 package io.github.maksymilianrozanski.icalreader
 
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -44,8 +45,18 @@ class MainActivity : AppCompatActivity() {
                 adapter.setData(it.data)
             }
             when (it.status) {
-                "Loading" -> progressBar.visibility = View.VISIBLE
-                else -> progressBar.visibility = View.GONE
+                "Loading" -> {
+                    progressBar.isIndeterminate = true
+                    progressBar.progressBackgroundTintList = ColorStateList.valueOf(Color.GRAY)
+                }
+                "Success" -> {
+                    progressBar.isIndeterminate = false
+                    progressBar.progressBackgroundTintList = ColorStateList.valueOf(Color.GREEN)
+                }
+                else -> {
+                    progressBar.isIndeterminate = false
+                    progressBar.progressBackgroundTintList = ColorStateList.valueOf(Color.RED)
+                }
             }
             Toast.makeText(this, it.status, Toast.LENGTH_LONG).show()
         }

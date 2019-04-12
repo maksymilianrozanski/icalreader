@@ -15,6 +15,7 @@ class ModelImpl @Inject constructor(
 
     override fun requestCalendarResponse(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
         return Observable.concatArray(loadEventsFromDatabase(),
+            Observable.just(CalendarResponse.loading(mutableListOf())),
             requestCalendarResponseFromApi().doOnNext {
                 if (it.status == "Success") {
                     replaceSavedEvents(it.data)
