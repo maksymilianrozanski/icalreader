@@ -62,6 +62,6 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
                 return index
             }
         }
-        return 0
+        return list.size-1
     }
 }

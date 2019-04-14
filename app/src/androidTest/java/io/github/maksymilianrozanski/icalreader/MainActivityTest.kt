@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.rule.ActivityTestRule
 import io.github.maksymilianrozanski.icalreader.component.DaggerTestAppComponent
 import io.github.maksymilianrozanski.icalreader.module.AppModule
+import io.github.maksymilianrozanski.icalreader.module.CalendarTestModule
 import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -16,6 +17,7 @@ import org.hamcrest.CoreMatchers.containsString
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import java.util.*
 
 class MainActivityTest {
 
@@ -28,6 +30,7 @@ class MainActivityTest {
 
     @Before
     fun setUp() {
+        val calendar = Calendar.getInstance()
         server = MockWebServer()
         server.start()
         val mockResponse = MockResponse()
@@ -44,6 +47,7 @@ class MainActivityTest {
 
         val testAppComponent = DaggerTestAppComponent.builder()
             .appModule(AppModule(app))
+            .calendarTestModule(CalendarTestModule(calendar))
             .build()
 
         app.appComponent = testAppComponent
