@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.icalreader.component
 import android.app.Application
 import android.content.Context
 import dagger.Component
+import io.github.maksymilianrozanski.icalreader.EventsAdapter
 import io.github.maksymilianrozanski.icalreader.MainActivity
 import io.github.maksymilianrozanski.icalreader.MyApp
 import io.github.maksymilianrozanski.icalreader.model.Model
@@ -10,7 +11,8 @@ import io.github.maksymilianrozanski.icalreader.module.*
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, ViewModelModule::class, NetworkModule::class, ModelImplModule::class, ICalReaderModule::class, DatabaseModule::class])
+@Component(modules = [AppModule::class, ViewModelModule::class, NetworkModule::class, ModelImplModule::class,
+    ICalReaderModule::class, DatabaseModule::class, CalendarModule::class])
 interface AppComponent {
 
     fun inject(myApp: MyApp)
@@ -18,6 +20,8 @@ interface AppComponent {
     fun inject(mainActivity: MainActivity)
 
     fun inject(modelImpl: Model)
+
+    fun inject(adapter:EventsAdapter)
 
     fun getContext(): Context
 
