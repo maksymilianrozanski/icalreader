@@ -28,14 +28,14 @@ class ICalReaderTest {
         val iCalReader = ICalReaderImpl()
         val output = iCalReader.getCalendarEvents(inputICalString)
         val indexZeroEvent = output[0]
-
+//TODO: fix so tests will run independently from time zone and daylight saving time
         assertTrue(indexZeroEvent.title == "Bastille Day Party")
         assertTrue(indexZeroEvent.dateStart.toString().contains("1997"))
         assertTrue(indexZeroEvent.dateStart.toString().contains("Jul 14"))
-        assertTrue(indexZeroEvent.dateStart.toString().contains("18:00"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("19:00"))
         assertTrue(indexZeroEvent.dateEnd.toString().contains("1997"))
         assertTrue(indexZeroEvent.dateEnd.toString().contains("Jul 15"))
-        assertTrue(indexZeroEvent.dateEnd.toString().contains("04:59"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("05:59"))
         assertTrue(indexZeroEvent.description == "This is example event description.")
         assertTrue(indexZeroEvent.location == "Warsaw")
     }
@@ -63,10 +63,10 @@ class ICalReaderTest {
         assertTrue(indexZeroEvent.title == "")
         assertTrue(indexZeroEvent.dateStart.toString().contains("1997"))
         assertTrue(indexZeroEvent.dateStart.toString().contains("Jul 14"))
-        assertTrue(indexZeroEvent.dateStart.toString().contains("18:00"))
+        assertTrue(indexZeroEvent.dateStart.toString().contains("19:00"))
         assertTrue(indexZeroEvent.dateEnd.toString().contains("1997"))
         assertTrue(indexZeroEvent.dateEnd.toString().contains("Jul 15"))
-        assertTrue(indexZeroEvent.dateEnd.toString().contains("04:59"))
+        assertTrue(indexZeroEvent.dateEnd.toString().contains("05:59"))
         assertTrue(indexZeroEvent.description == "")
         assertTrue(indexZeroEvent.location == "")
     }

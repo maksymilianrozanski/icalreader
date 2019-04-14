@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import java.text.SimpleDateFormat
 import java.util.*
 
 class EventsAdapter(private val context: Context, private var list: MutableList<CalendarEvent>) :
@@ -30,6 +31,8 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
     }
 
     inner class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
+        private val simpleDateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+
         var eventTitle = itemView.findViewById(R.id.eventTitleTextView) as TextView
         var eventDateStart = itemView.findViewById(R.id.eventDateStartTextView) as TextView
         var eventDateEnd = itemView.findViewById(R.id.eventDateEndTextView) as TextView
@@ -38,8 +41,8 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
 
         fun bindViews(event: CalendarEvent) {
             eventTitle.text = event.title
-            eventDateStart.text = event.dateStart.toString()
-            eventDateEnd.text = event.dateEnd.toString()
+            eventDateStart.text =simpleDateFormatter.format(event.dateStart)
+            eventDateEnd.text = simpleDateFormatter.format(event.dateEnd)
             eventDescription.text = event.description
             eventLocation.text = event.location
         }
@@ -48,8 +51,8 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
     fun getPositionOfFirstNotFinishedEvent(): Int {
         val calendar = Calendar.getInstance()
         val currentTime = calendar.time
-        for (index in list.indices){
-            if (list[index].dateEnd > currentTime){
+        for (index in list.indices) {
+            if (list[index].dateEnd > currentTime) {
                 return index
             }
         }
