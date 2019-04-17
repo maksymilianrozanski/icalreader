@@ -14,6 +14,7 @@ import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelFactory
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelImpl
 import kotlinx.android.synthetic.main.activity_main.*
+import java.util.*
 import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
+    @Inject
+    lateinit var calendar: Calendar
     private lateinit var viewModelImpl: ViewModelImpl
     private lateinit var layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
     private lateinit var adapter: EventsAdapter
@@ -68,7 +71,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scrollToMostRecent() {
-        val positionOfEvent = getPositionOfFirstNotFinishedEvent(adapter.calendar, adapter.list)
+        val positionOfEvent = getPositionOfFirstNotFinishedEvent(calendar, adapter.list)
         (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
             positionOfEvent,
             0

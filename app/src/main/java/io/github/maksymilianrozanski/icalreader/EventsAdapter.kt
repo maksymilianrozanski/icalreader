@@ -8,17 +8,9 @@ import android.widget.TextView
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 class EventsAdapter(private val context: Context, var list: MutableList<CalendarEvent>) :
     androidx.recyclerview.widget.RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
-
-    @Inject
-    lateinit var calendar: Calendar
-
-    init {
-        (context.applicationContext as MyApp).appComponent.inject(this)
-    }
 
     override fun onCreateViewHolder(partent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.event_list_row, partent, false)
