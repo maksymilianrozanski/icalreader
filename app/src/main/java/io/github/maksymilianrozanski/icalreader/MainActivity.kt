@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModelImpl = ViewModelProviders.of(this, viewModelFactory).get(ViewModelImpl::class.java)
-        layoutManager = androidx.recyclerview.widget.LinearLayoutManager(this)
+        layoutManager = LinearLayoutManager(this)
         adapter = EventsAdapter(this, viewModelImpl.events.value?.data ?: mutableListOf())
 
         recyclerViewId.layoutManager = layoutManager
