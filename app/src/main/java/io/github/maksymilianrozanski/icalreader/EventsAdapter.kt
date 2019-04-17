@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
-class EventsAdapter(private val context: Context, private var list: MutableList<CalendarEvent>) :
+class EventsAdapter(private val context: Context, var list: MutableList<CalendarEvent>) :
     androidx.recyclerview.widget.RecyclerView.Adapter<EventsAdapter.ViewHolder>() {
 
     @Inject
@@ -19,6 +19,7 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
     init {
         (context.applicationContext as MyApp).appComponent.inject(this)
     }
+
     override fun onCreateViewHolder(partent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.event_list_row, partent, false)
         return ViewHolder(view)
@@ -48,20 +49,20 @@ class EventsAdapter(private val context: Context, private var list: MutableList<
 
         fun bindViews(event: CalendarEvent) {
             eventTitle.text = event.title
-            eventDateStart.text =simpleDateFormatter.format(event.dateStart)
+            eventDateStart.text = simpleDateFormatter.format(event.dateStart)
             eventDateEnd.text = simpleDateFormatter.format(event.dateEnd)
             eventDescription.text = event.description
             eventLocation.text = event.location
         }
     }
+}
 
-    fun getPositionOfFirstNotFinishedEvent(): Int {
-        val currentTime = calendar.time
-        for (index in list.indices) {
-            if (list[index].dateEnd > currentTime) {
-                return index
-            }
+fun getPositionOfFirstNotFinishedEvent(calendar: Calendar, list: List<CalendarEvent>): Int {
+    val currentTime = calendar.time
+    for (index in list.indices) {
+        if (list[index].dateEnd > currentTime) {
+            return index
         }
-        return list.size-1
     }
+    return list.size - 1
 }

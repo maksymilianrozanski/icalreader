@@ -12,7 +12,7 @@ import java.util.*
 class EventsAdapterTest {
 
     @Test
-    fun getPositionOfFirstNotFinishedEvent() {
+    fun getPositionOfFirstNotFinishedEventTest() {
         val exampleTitle = "example title"
         val exampleDescription = "example description"
         val exampleLocation = "example location"
@@ -80,33 +80,29 @@ class EventsAdapterTest {
         val adapter = EventsAdapter(app, events)
         appComponent.inject(adapter)
 
-        println(adapter.calendar === calendar)
-        println(calendar.hashCode().toString())
-        println(adapter.calendar.hashCode().toString())
-
         //before all
         calendar.set(1998, 2, 2, 10, 0, 0)
-        Assert.assertEquals(0, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(0, getPositionOfFirstNotFinishedEvent(calendar, events))
         //during first
         calendar.set(1999, 1, 1, 10, 0, 0)
-        Assert.assertEquals(0, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(0, getPositionOfFirstNotFinishedEvent(calendar, events))
         //after first
         calendar.set(1999, 1, 5, 10, 0, 0)
-        Assert.assertEquals(1, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(1, getPositionOfFirstNotFinishedEvent(calendar, events))
         //during second
         calendar.set(1999, 2, 3, 14, 0, 0)
-        Assert.assertEquals(1, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(1, getPositionOfFirstNotFinishedEvent(calendar, events))
         //during second and third
         calendar.set(1999, 4, 10, 10, 10, 10)
-        Assert.assertEquals(1, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(1, getPositionOfFirstNotFinishedEvent(calendar, events))
         //after second, during third
         calendar.set(1999, 7, 2, 10, 12, 12)
-        Assert.assertEquals(2, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(2, getPositionOfFirstNotFinishedEvent(calendar, events))
         //after third
         calendar.set(1999, 12, 24, 12, 0, 0)
-        Assert.assertEquals(3, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(3, getPositionOfFirstNotFinishedEvent(calendar, events))
         //after all (should return index of last event)
         calendar.set(2013, 12, 12, 12, 0, 0)
-        Assert.assertEquals(3, adapter.getPositionOfFirstNotFinishedEvent())
+        Assert.assertEquals(3, getPositionOfFirstNotFinishedEvent(calendar, events))
     }
 }

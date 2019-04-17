@@ -68,8 +68,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun scrollToMostRecent() {
+        val positionOfEvent = getPositionOfFirstNotFinishedEvent(adapter.calendar, adapter.list)
         (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
-            adapter.getPositionOfFirstNotFinishedEvent(),
+            positionOfEvent,
             0
         )
     }
