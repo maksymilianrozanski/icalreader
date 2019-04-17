@@ -1,10 +1,6 @@
 package io.github.maksymilianrozanski.icalreader
 
-import androidx.test.platform.app.InstrumentationRegistry
-import io.github.maksymilianrozanski.icalreader.component.DaggerTestAppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
-import io.github.maksymilianrozanski.icalreader.module.AppModule
-import io.github.maksymilianrozanski.icalreader.module.CalendarTestModule
 import org.junit.Assert
 import org.junit.Test
 import java.util.*
@@ -69,16 +65,6 @@ class EventsAdapterTest {
         )
 
         val events = mutableListOf(event1, event2, event3, event4)
-
-        val app = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext as MyApp
-        val appComponent = DaggerTestAppComponent.builder()
-            .appModule(AppModule(app))
-            .calendarTestModule(CalendarTestModule(calendar))
-            .build()
-        app.appComponent = appComponent
-
-        val adapter = EventsAdapter(app, events)
-        appComponent.inject(adapter)
 
         //before all
         calendar.set(1998, 2, 2, 10, 0, 0)
