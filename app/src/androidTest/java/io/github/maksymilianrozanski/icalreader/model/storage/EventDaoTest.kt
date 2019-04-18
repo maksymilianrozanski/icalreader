@@ -174,4 +174,83 @@ class EventDaoTest {
         Assert.assertEquals(calendarTwo.calendarUrl, fetchedCalendar.calendarUrl)
         Assert.assertEquals(1, fetchedCalendars.size)
     }
+
+    @Test
+    fun getEventsOfSpecificCalendarTest(){
+        val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
+        val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")
+        val eventOne = CalendarEvent(
+            title = "example title one",
+            dateStart = Date(1999, 10, 10, 10, 10, 10),
+            dateEnd = Date(1999, 11, 11, 11, 11, 11),
+            location = "example location one",
+            description = "example description one",
+            calendarId = calendarOne.calendarId
+        )
+        val eventTwo = CalendarEvent(
+            title = "example title two",
+            dateStart = Date(2001, 10, 10, 10, 10, 10),
+            dateEnd = Date(2001, 11, 11, 11, 11, 11),
+            location = "example location two",
+            description = "example description two",
+            calendarId = calendarOne.calendarId
+        )
+        val eventThree = CalendarEvent(
+            title = "example title three",
+            dateStart = Date(2003, 10, 10, 10, 10, 10),
+            dateEnd = Date(2003, 11, 11, 11, 11, 11),
+            location = "example location three",
+            description = "example description three",
+            calendarId = calendarTwo.calendarId
+        )
+
+        database.eventDao().insertCalendar(calendarOne)
+        database.eventDao().insertCalendar(calendarTwo)
+        database.eventDao().insertEvent(eventOne)
+        database.eventDao().insertEvent(eventTwo)
+        database.eventDao().insertEvent(eventThree)
+
+        val fetchedEventsCalendarOne = database.eventDao().getEventsOfCalendar(calendarOne.calendarId)
+        Assert.assertEquals(2, fetchedEventsCalendarOne.size)
+        Assert.assertEquals(listOf(eventOne, eventTwo), fetchedEventsCalendarOne)
+        val fetchedEventsCalendarTwo = database.eventDao().getEventsOfCalendar(calendarTwo.calendarId)
+        Assert.assertEquals(1, fetchedEventsCalendarTwo.size)
+        Assert.assertEquals(eventThree, fetchedEventsCalendarTwo[0])
+    }
+
+    @Test
+    fun deleteEventsOfSpecificCalendarTest() {
+        val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
+        val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")
+        val eventOne = CalendarEvent(
+            title = "example title one",
+            dateStart = Date(1999, 10, 10, 10, 10, 10),
+            dateEnd = Date(1999, 11, 11, 11, 11, 11),
+            location = "example location one",
+            description = "example description one",
+            calendarId = calendarOne.calendarId
+        )
+        val eventTwo = CalendarEvent(
+            title = "example title two",
+            dateStart = Date(2001, 10, 10, 10, 10, 10),
+            dateEnd = Date(2001, 11, 11, 11, 11, 11),
+            location = "example location two",
+            description = "example description two",
+            calendarId = calendarTwo.calendarId
+        )
+
+        database.eventDao().insertCalendar(calendarOne)
+        database.eventDao().insertCalendar(calendarTwo)
+        database.eventDao().insertEvent(eventOne)
+        database.eventDao().insertEvent(eventTwo)
+
+        Assert.assertEquals(2, database.eventDao().getAllCalendars().size)
+        Assert.assertEquals(1, database.eventDao().getEventsOfCalendar(calendarOne.calendarId).size)
+        Assert.assertEquals(1, database.eventDao().getEventsOfCalendar(calendarTwo.calendarId).size)
+
+        database.eventDao().deleteAllEventsOfCalendar(calendarOne.calendarId)
+
+        Assert.assertEquals(0, database.eventDao().getEventsOfCalendar(calendarOne.calendarId).size)
+        Assert.assertEquals(1, database.eventDao().getEventsOfCalendar(calendarTwo.calendarId).size)
+    }
 }

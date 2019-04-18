@@ -20,6 +20,9 @@ interface EventDao {
     @Query("SELECT * FROM calendars")
     fun getAllCalendarsSingle(): Single<List<WebCalendar>>
 
+    @Query("SELECT * FROM events WHERE calendarid = :webCalendarId ORDER BY datestart")
+    fun getEventsOfCalendar(webCalendarId: String): List<CalendarEvent>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCalendar(calendar: WebCalendar)
 
@@ -37,4 +40,7 @@ interface EventDao {
 
     @Delete
     fun deleteCalendar(calendar: WebCalendar)
+
+    @Query("DELETE FROM events WHERE events.calendarid = :webCalendarId")
+    fun deleteAllEventsOfCalendar(webCalendarId: String)
 }
