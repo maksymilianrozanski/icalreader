@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.icalreader.model
 import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
+import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -49,7 +50,26 @@ class ModelImpl @Inject constructor(
     }
 
     private fun replaceSavedEvents(events: List<CalendarEvent>) {
+        dataSource.deleteAllCalendars()
+        val calendar =
+            WebCalendar(calendarName = "Temp name", calendarUrl = "http://10.0.2.2:8080/api/test.ical")
+        dataSource.insertCalendar(calendar)
+
+        val eventsCorrectIds = mutableListOf<CalendarEvent>()
+
+        events.forEach {
+            val event = CalendarEvent(
+                calendarId = calendar.calendarId,
+                title = it.title,
+                dateStart = it.dateStart,
+                dateEnd = it.dateEnd,
+                description = it.description,
+                location = it.location
+            )
+            eventsCorrectIds.add(event)
+        }
+
         dataSource.deleteAllEvents()
-        dataSource.insertEventsList(events)
+        dataSource.insertEventsList(eventsCorrectIds)
     }
 }

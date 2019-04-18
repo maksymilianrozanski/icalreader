@@ -6,8 +6,9 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 
-@Database(entities = [CalendarEvent::class], version = 1)
+@Database(entities = [WebCalendar::class, CalendarEvent::class], version = 2)
 @TypeConverters(DateTypeConverter::class)
 abstract class EventsDatabase : RoomDatabase() {
 

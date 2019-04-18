@@ -47,6 +47,7 @@ class ModelImplTest {
 
         val mockedEvents = listOf(
             CalendarEvent(
+                calendarId = "12345",
                 title = "Informatyka Lab",
                 dateStart = middleEventDateStart,
                 dateEnd = middleEventDateEnd,
@@ -54,6 +55,7 @@ class ModelImplTest {
                 location = "Kraków"
             ),
             CalendarEvent(
+                calendarId = "12345",
                 title = "Chemia",
                 dateStart = oldestEventDateStart,
                 dateEnd = oldestEventDateEnd,
@@ -61,6 +63,7 @@ class ModelImplTest {
                 location = "Kraków"
             ),
             CalendarEvent(
+                calendarId = "12345",
                 title = "Historia",
                 dateStart = newestEventDateStart,
                 dateEnd = newestEventDateEnd,

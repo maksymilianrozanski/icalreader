@@ -54,7 +54,9 @@ class ICalReaderImpl : ICalReader {
             }
 
             calendarEvents.add(
+                //TODO: replace calendarId with real value
                 CalendarEvent(
+                    calendarId = "temp string",
                     title = title, dateStart = start, dateEnd = end, description = description,
                     location = location
                 )
@@ -67,5 +69,5 @@ class ICalReaderImpl : ICalReader {
 fun toWarsawTimeZone(input: String): Date {
     val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
     dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-   return   dateFormat.parse(input)
+    return dateFormat.parse(input)
 }

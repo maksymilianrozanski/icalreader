@@ -36,6 +36,7 @@ class EventsAdapterTest {
         val dateEnd4 = calendar.time
 
         val event1 = CalendarEvent(
+            calendarId = "12345",
             dateStart = dateStart1,
             dateEnd = dateEnd1,
             title = exampleTitle,
@@ -43,6 +44,7 @@ class EventsAdapterTest {
             description = exampleDescription
         )
         val event2 = CalendarEvent(
+            calendarId = "12345",
             dateStart = dateStart2,
             dateEnd = dateEnd2,
             title = exampleTitle,
@@ -50,6 +52,7 @@ class EventsAdapterTest {
             description = exampleDescription
         )
         val event3 = CalendarEvent(
+            calendarId = "12345",
             dateStart = dateStart3,
             dateEnd = dateEnd3,
             title = exampleTitle,
@@ -57,6 +60,7 @@ class EventsAdapterTest {
             description = exampleDescription
         )
         val event4 = CalendarEvent(
+            calendarId = "12345",
             dateStart = dateStart4,
             dateEnd = dateEnd4,
             title = exampleTitle,
