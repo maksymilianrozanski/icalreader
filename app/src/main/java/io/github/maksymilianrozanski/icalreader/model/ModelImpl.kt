@@ -1,9 +1,6 @@
 package io.github.maksymilianrozanski.icalreader.model
 
-import io.github.maksymilianrozanski.icalreader.data.APIService
-import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
-import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
-import io.github.maksymilianrozanski.icalreader.data.WebCalendar
+import io.github.maksymilianrozanski.icalreader.data.*
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.reactivex.Observable
 import javax.inject.Inject
@@ -22,6 +19,20 @@ class ModelImpl @Inject constructor(
                     replaceSavedEvents(it.data)
                 }
             }).onErrorReturnItem(ResponseWrapper.error(mutableListOf(), "Other exception"))
+    }
+
+    override fun requestCalendarData(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
+        return Observable.concatArray(
+            Observable.just(ResponseWrapper.loading(CalendarData(webCalendar, listOf()))),
+            requestCalendarResponseFromApi(webCalendar).doOnNext {
+                if (it.status == "Success") {
+                    replaceSavedEvents(webCalendar, it.data.events)
+                }
+            }).onErrorReturnItem(ResponseWrapper.error(CalendarData(webCalendar, listOf()), "Other exception"))
+    }
+
+    private fun replaceSavedEvents(webCalendar: WebCalendar, events: List<CalendarEvent>) {
+
     }
 
     private fun replaceSavedEvents(events: List<CalendarEvent>) {
@@ -65,6 +76,23 @@ class ModelImpl @Inject constructor(
                 successResponse
             } else {
                 ResponseWrapper.error(mutableListOf(), it.code().toString())
+            }
+        }
+    }
+
+    fun requestCalendarResponseFromApi(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
+        //TODO: replace with response for url from webCalendar
+        return apiService.getResponse().map {
+            if (it.code() == 200 && it.body() != null) {
+                val iCalString = it.body()!!.string()
+                val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
+                events.sortBy(CalendarEvent::dateStart)
+
+                val calendarData = CalendarData(webCalendar, events)
+                val successResponse = ResponseWrapper.success(calendarData)
+                successResponse
+            } else {
+                ResponseWrapper.error(CalendarData(webCalendar, listOf()), it.code().toString())
             }
         }
     }
