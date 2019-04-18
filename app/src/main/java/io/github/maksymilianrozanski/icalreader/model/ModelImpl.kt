@@ -24,31 +24,6 @@ class ModelImpl @Inject constructor(
             }).onErrorReturnItem(CalendarResponse.error(mutableListOf(), "Other exception"))
     }
 
-    override fun requestSavedData(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
-        return loadEventsFromDatabase()
-    }
-
-    fun requestCalendarResponseFromApi(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
-        return apiService.getResponse().map {
-            if (it.code() == 200 && it.body() != null) {
-                val iCalString = it.body()!!.string()
-                val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
-                events.sortBy(CalendarEvent::dateStart)
-                val successResponse = CalendarResponse.success(events)
-                successResponse
-            } else {
-                CalendarResponse.error(mutableListOf(), it.code().toString())
-            }
-        }
-    }
-
-    private fun loadEventsFromDatabase(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
-        return dataSource.getAllEventsSingle().map { it ->
-            val calendarResponse = CalendarResponse.success(it.toMutableList())
-            calendarResponse
-        }.toObservable()
-    }
-
     private fun replaceSavedEvents(events: List<CalendarEvent>) {
         dataSource.deleteAllCalendars()
         val calendar =
@@ -71,5 +46,43 @@ class ModelImpl @Inject constructor(
 
         dataSource.deleteAllEvents()
         dataSource.insertEventsList(eventsCorrectIds)
+    }
+
+    override fun requestSavedData(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+        return loadEventsFromDatabase()
+    }
+
+    private fun loadEventsFromDatabase(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+        return dataSource.getAllEventsSingle().map { it ->
+            val calendarResponse = CalendarResponse.success(it.toMutableList())
+            calendarResponse
+        }.toObservable()
+    }
+
+    fun requestCalendarResponseFromApi(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+        return apiService.getResponse().map {
+            if (it.code() == 200 && it.body() != null) {
+                val iCalString = it.body()!!.string()
+                val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
+                events.sortBy(CalendarEvent::dateStart)
+                val successResponse = CalendarResponse.success(events)
+                successResponse
+            } else {
+                CalendarResponse.error(mutableListOf(), it.code().toString())
+            }
+        }
+    }
+
+    override fun saveNewCalendar(calendarName: String, url: String) {
+        val webCalendar = WebCalendar(calendarName = calendarName, calendarUrl = url)
+        dataSource.insertCalendar(webCalendar)
+    }
+
+    override fun requestSavedCalendars(): Observable<List<WebCalendar>> {
+        return Observable.just(dataSource.getAllCalendars())
+    }
+
+    override fun deleteCalendar(calendar: WebCalendar) {
+        dataSource.deleteCalendar(calendar)
     }
 }

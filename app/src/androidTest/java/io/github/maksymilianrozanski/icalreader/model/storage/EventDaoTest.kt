@@ -145,4 +145,33 @@ class EventDaoTest {
         fetchedEvents = database.eventDao().getAllEvents()
         Assert.assertEquals(0, fetchedEvents.size)
     }
+
+    @Test
+    fun getAllCalendarsSingleTest() {
+        val webCalendar = WebCalendar(calendarName = "example calendar", calendarUrl = "http://example.com")
+        database.eventDao().insertCalendar(webCalendar)
+
+        database.eventDao().getAllCalendarsSingle().test()
+            .assertValue { it[0] == webCalendar }
+    }
+
+    @Test
+    fun deleteSingleCalendarTest() {
+        val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
+        val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")
+
+        database.eventDao().insertCalendar(calendarOne)
+        database.eventDao().insertCalendar(calendarTwo)
+
+        Assert.assertEquals(2, database.eventDao().getAllCalendars().size)
+
+        database.eventDao().deleteCalendar(calendarOne)
+
+        val fetchedCalendars = database.eventDao().getAllCalendars()
+        val fetchedCalendar = fetchedCalendars[0]
+        Assert.assertEquals(calendarTwo.calendarId, fetchedCalendar.calendarId)
+        Assert.assertEquals(calendarTwo.calendarName, fetchedCalendar.calendarName)
+        Assert.assertEquals(calendarTwo.calendarUrl, fetchedCalendar.calendarUrl)
+        Assert.assertEquals(1, fetchedCalendars.size)
+    }
 }
