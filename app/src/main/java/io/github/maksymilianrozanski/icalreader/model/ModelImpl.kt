@@ -49,11 +49,7 @@ class ModelImpl @Inject constructor(
     }
 
     override fun requestSavedData(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
-        return loadEventsFromDatabase()
-    }
-
-    private fun loadEventsFromDatabase(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
-        return dataSource.getAllEventsSingle().map { it ->
+        return dataSource.getAllEventsSingle().map {
             val calendarResponse = CalendarResponse.success(it.toMutableList())
             calendarResponse
         }.toObservable()
