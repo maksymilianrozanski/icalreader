@@ -2,7 +2,7 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
-import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
+import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.reactivex.Observable
@@ -14,14 +14,14 @@ class ModelImpl @Inject constructor(
     val dataSource: EventDao
 ) : Model {
 
-    override fun requestNewData(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+    override fun requestNewData(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {
         return Observable.concatArray(
-            Observable.just(CalendarResponse.loading(mutableListOf())),
+            Observable.just(ResponseWrapper.loading(mutableListOf())),
             requestCalendarResponseFromApi().doOnNext {
                 if (it.status == "Success") {
                     replaceSavedEvents(it.data)
                 }
-            }).onErrorReturnItem(CalendarResponse.error(mutableListOf(), "Other exception"))
+            }).onErrorReturnItem(ResponseWrapper.error(mutableListOf(), "Other exception"))
     }
 
     private fun replaceSavedEvents(events: List<CalendarEvent>) {
@@ -48,23 +48,23 @@ class ModelImpl @Inject constructor(
         dataSource.insertEventsList(eventsCorrectIds)
     }
 
-    override fun requestSavedData(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+    override fun requestSavedData(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {
         return dataSource.getAllEventsSingle().map {
-            val calendarResponse = CalendarResponse.success(it.toMutableList())
+            val calendarResponse = ResponseWrapper.success(it.toMutableList())
             calendarResponse
         }.toObservable()
     }
 
-    fun requestCalendarResponseFromApi(): Observable<CalendarResponse<MutableList<CalendarEvent>>> {
+    fun requestCalendarResponseFromApi(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {
         return apiService.getResponse().map {
             if (it.code() == 200 && it.body() != null) {
                 val iCalString = it.body()!!.string()
                 val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
                 events.sortBy(CalendarEvent::dateStart)
-                val successResponse = CalendarResponse.success(events)
+                val successResponse = ResponseWrapper.success(events)
                 successResponse
             } else {
-                CalendarResponse.error(mutableListOf(), it.code().toString())
+                ResponseWrapper.error(mutableListOf(), it.code().toString())
             }
         }
     }

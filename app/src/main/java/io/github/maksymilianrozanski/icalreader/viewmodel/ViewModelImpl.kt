@@ -3,7 +3,7 @@ package io.github.maksymilianrozanski.icalreader.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
-import io.github.maksymilianrozanski.icalreader.data.CalendarResponse
+import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
@@ -15,8 +15,8 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
     @Inject
     lateinit var model: Model
 
-    val events: MutableLiveData<CalendarResponse<MutableList<CalendarEvent>>> by lazy {
-        MutableLiveData<CalendarResponse<MutableList<CalendarEvent>>>()
+    val events: MutableLiveData<ResponseWrapper<MutableList<CalendarEvent>>> by lazy {
+        MutableLiveData<ResponseWrapper<MutableList<CalendarEvent>>>()
     }
 
     private lateinit var subscription: Disposable
@@ -38,7 +38,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
         subscription = model.requestNewData()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { events.value = CalendarResponse.loading(mutableListOf()) }
+            .doOnSubscribe { events.value = ResponseWrapper.loading(mutableListOf()) }
             .doOnError { println("Error") }
             .subscribe {
                 events.value = it
