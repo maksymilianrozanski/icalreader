@@ -81,8 +81,7 @@ class ModelImpl @Inject constructor(
     }
 
     fun requestCalendarResponseFromApi(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
-        //TODO: replace with response for url from webCalendar
-        return apiService.getResponse().map {
+        return apiService.getResponse(webCalendar.calendarUrl).map {
             if (it.code() == 200 && it.body() != null) {
                 val iCalString = it.body()!!.string()
                 val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
