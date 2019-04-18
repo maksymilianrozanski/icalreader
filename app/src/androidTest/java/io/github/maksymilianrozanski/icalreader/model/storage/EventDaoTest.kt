@@ -176,29 +176,29 @@ class EventDaoTest {
     }
 
     @Test
-    fun getEventsOfSpecificCalendarTest(){
+    fun getEventsOfSpecificCalendarTest() {
         val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
         val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")
         val eventOne = CalendarEvent(
             title = "example title one",
-            dateStart = Date(1999, 10, 10, 10, 10, 10),
-            dateEnd = Date(1999, 11, 11, 11, 11, 11),
+            dateStart = Date(915181810000L),
+            dateEnd = Date(915189010000L),
             location = "example location one",
             description = "example description one",
             calendarId = calendarOne.calendarId
         )
         val eventTwo = CalendarEvent(
             title = "example title two",
-            dateStart = Date(2001, 10, 10, 10, 10, 10),
-            dateEnd = Date(2001, 11, 11, 11, 11, 11),
+            dateStart = Date(946725010000L),
+            dateEnd = Date(946728610000L),
             location = "example location two",
             description = "example description two",
             calendarId = calendarOne.calendarId
         )
         val eventThree = CalendarEvent(
             title = "example title three",
-            dateStart = Date(2003, 10, 10, 10, 10, 10),
-            dateEnd = Date(2003, 11, 11, 11, 11, 11),
+            dateStart = Date(1009887010000L),
+            dateEnd = Date(1009897810000L),
             location = "example location three",
             description = "example description three",
             calendarId = calendarTwo.calendarId
@@ -224,16 +224,16 @@ class EventDaoTest {
         val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")
         val eventOne = CalendarEvent(
             title = "example title one",
-            dateStart = Date(1999, 10, 10, 10, 10, 10),
-            dateEnd = Date(1999, 11, 11, 11, 11, 11),
+            dateStart = Date(915181810000L),
+            dateEnd = Date(915189010000L),
             location = "example location one",
             description = "example description one",
             calendarId = calendarOne.calendarId
         )
         val eventTwo = CalendarEvent(
             title = "example title two",
-            dateStart = Date(2001, 10, 10, 10, 10, 10),
-            dateEnd = Date(2001, 11, 11, 11, 11, 11),
+            dateStart = Date(946725010000L),
+            dateEnd = Date(946728610000L),
             location = "example location two",
             description = "example description two",
             calendarId = calendarTwo.calendarId
