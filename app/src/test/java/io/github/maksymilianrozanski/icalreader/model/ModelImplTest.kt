@@ -2,8 +2,10 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.argWhere
 import com.nhaarman.mockitokotlin2.timeout
 import io.github.maksymilianrozanski.icalreader.TestHelper
+import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
@@ -225,5 +227,54 @@ class ModelImplTest {
         val recordedRequest = server.takeRequest()
         Assert.assertTrue(recordedRequest.method == "GET")
         Assert.assertTrue(recordedRequest.requestUrl.toString() == urlExpectedInRequest)
+    }
+
+    @Test
+    fun replaceSavedEventsTest() {
+        val apiService = Mockito.mock(APIService::class.java)
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
+
+        val eventFromApiOne = CalendarEvent(
+            calendarId = "Should be updated",
+            title = "example title",
+            dateStart = Date(939543010000L),
+            dateEnd = Date(939550210000L),
+            description = "example description",
+            location = "example location"
+        )
+
+        val eventFromApiTwo = CalendarEvent(
+            calendarId = "Should be updated",
+            title = "example title two",
+            dateStart = Date(971172610000L),
+            dateEnd = Date(971183410000L),
+            description = "example description two",
+            location = "example location two"
+        )
+
+        val webCalendar = WebCalendar(calendarName = "Calendar name", calendarUrl = "http://example.com")
+
+        val eventsFromApi = listOf(eventFromApiOne, eventFromApiTwo)
+
+        model.replaceSavedEvents(webCalendar, eventsFromApi)
+
+        Mockito.verify(dataSource).deleteAllEventsOfCalendar(argThat { equals(webCalendar.calendarId) })
+        Mockito.verify(dataSource)
+            .insertEventsList(argWhere {
+                it[0].calendarId == webCalendar.calendarId
+                        && it[0].title == eventFromApiOne.title
+                        && it[0].dateStart == eventFromApiOne.dateStart
+                        && it[0].dateEnd == eventFromApiOne.dateEnd
+                        && it[0].description == eventFromApiOne.description
+                        && it[0].location == eventFromApiOne.location
+                        && it[1].calendarId == webCalendar.calendarId
+                        && it[1].title == eventFromApiTwo.title
+                        && it[1].dateStart == eventFromApiTwo.dateStart
+                        && it[1].dateEnd == eventFromApiTwo.dateEnd
+                        && it[1].description == eventFromApiTwo.description
+                        && it[1].location == eventFromApiTwo.location
+            })
     }
 }

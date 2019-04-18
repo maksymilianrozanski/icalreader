@@ -31,8 +31,22 @@ class ModelImpl @Inject constructor(
             }).onErrorReturnItem(ResponseWrapper.error(CalendarData(webCalendar, listOf()), "Other exception"))
     }
 
-    private fun replaceSavedEvents(webCalendar: WebCalendar, events: List<CalendarEvent>) {
+    fun replaceSavedEvents(webCalendar: WebCalendar, events: List<CalendarEvent>) {
+        val eventsCorrectIds = mutableListOf<CalendarEvent>()
+        events.forEach {
+            val event = CalendarEvent(
+                calendarId = webCalendar.calendarId,
+                title = it.title,
+                dateStart = it.dateStart,
+                dateEnd = it.dateEnd,
+                description = it.description,
+                location = it.location
+            )
+            eventsCorrectIds.add(event)
+        }
 
+        dataSource.deleteAllEventsOfCalendar(webCalendar.calendarId)
+        dataSource.insertEventsList(eventsCorrectIds)
     }
 
     private fun replaceSavedEvents(events: List<CalendarEvent>) {
