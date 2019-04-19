@@ -80,6 +80,13 @@ class ModelImpl @Inject constructor(
         }.toObservable()
     }
 
+    override fun requestSavedData(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
+        val events = dataSource.getEventsOfCalendar(webCalendar.calendarId)
+        val calendarData = CalendarData(webCalendar, events)
+        val response = ResponseWrapper.success(calendarData)
+        return Observable.just(response)
+    }
+
     fun requestCalendarResponseFromApi(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {
         return apiService.getResponse().map {
             if (it.code() == 200 && it.body() != null) {
@@ -116,7 +123,14 @@ class ModelImpl @Inject constructor(
     }
 
     override fun requestSavedCalendars(): Observable<List<WebCalendar>> {
-        return Observable.just(dataSource.getAllCalendars())
+        return Observable.just(
+            listOf(
+                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = "http://example.com"),
+                WebCalendar(calendarName = "Calendar mock 2", calendarUrl = "http://example2.com"),
+                WebCalendar(calendarName = "Calendar mock 3", calendarUrl = "http://example3.com")
+            )
+        )
+//        return Observable.just(dataSource.getAllCalendars())
     }
 
     override fun deleteCalendar(calendar: WebCalendar) {

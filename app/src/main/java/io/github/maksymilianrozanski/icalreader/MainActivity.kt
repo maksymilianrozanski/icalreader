@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         recyclerViewId.layoutManager = layoutManager
         recyclerViewId.adapter = adapter
 
-        setTemporaryNavigationDrawer()
+        setNavigationDrawer()
 
         val eventsObserver = Observer<ResponseWrapper<MutableList<CalendarEvent>>> {
             if (it?.data != null && it.data.isNotEmpty()) {
@@ -73,16 +73,17 @@ class MainActivity : AppCompatActivity() {
         floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
     }
 
-    private fun setTemporaryNavigationDrawer() {
-        val tempSavedCalendars = mutableListOf(
-            WebCalendar(calendarName = "Calendar One Mock", calendarUrl = "http://example.com"),
-            WebCalendar(calendarName = "Calendar Two Mock", calendarUrl = "http://example2.com")
-        )
+    private fun setNavigationDrawer() {
         val navViewLayoutManager = LinearLayoutManager(this)
-        val webCalendarAdapter = CalendarsAdapter(this, tempSavedCalendars)
+        val webCalendarAdapter = CalendarsAdapter(this, viewModelImpl.calendars.value ?: mutableListOf())
         navigationViewRecyclerView.layoutManager = navViewLayoutManager
         navigationViewRecyclerView.adapter = webCalendarAdapter
-        webCalendarAdapter.setData(tempSavedCalendars)
+        val calendarsObserver = Observer<MutableList<WebCalendar>> {
+            if (it != null && it.isNotEmpty()) {
+                webCalendarAdapter.setData(it)
+            }
+        }
+        viewModelImpl.calendars.observe(this, calendarsObserver)
     }
 
     private fun scrollToMostRecent() {
