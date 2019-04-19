@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
+import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelFactory
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelImpl
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,6 +45,8 @@ class MainActivity : AppCompatActivity() {
         recyclerViewId.layoutManager = layoutManager
         recyclerViewId.adapter = adapter
 
+        setTemporaryNavigationDrawer()
+
         val eventsObserver = Observer<ResponseWrapper<MutableList<CalendarEvent>>> {
             if (it?.data != null && it.data.isNotEmpty()) {
                 adapter.setData(it.data)
@@ -68,6 +71,18 @@ class MainActivity : AppCompatActivity() {
         viewModelImpl.events.observe(this, eventsObserver)
 
         floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
+    }
+
+    private fun setTemporaryNavigationDrawer() {
+        val tempSavedCalendars = mutableListOf(
+            WebCalendar(calendarName = "Calendar One Mock", calendarUrl = "http://example.com"),
+            WebCalendar(calendarName = "Calendar Two Mock", calendarUrl = "http://example2.com")
+        )
+        val navViewLayoutManager = LinearLayoutManager(this)
+        val webCalendarAdapter = CalendarsAdapter(this, tempSavedCalendars)
+        navigationViewRecyclerView.layoutManager = navViewLayoutManager
+        navigationViewRecyclerView.adapter = webCalendarAdapter
+        webCalendarAdapter.setData(tempSavedCalendars)
     }
 
     private fun scrollToMostRecent() {
