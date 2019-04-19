@@ -26,8 +26,11 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var calendar: Calendar
     private lateinit var viewModelImpl: ViewModelImpl
-    private lateinit var layoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
-    private lateinit var adapter: EventsAdapter
+
+    private lateinit var eventsLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
+    private lateinit var eventsAdapter: EventsAdapter
+    private lateinit var calendarsLayoutManager: LinearLayoutManager
+    private lateinit var calendarsAdapter: CalendarsAdapter
 
     lateinit var appComponent: AppComponent
 
@@ -39,17 +42,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         viewModelImpl = ViewModelProviders.of(this, viewModelFactory).get(ViewModelImpl::class.java)
-        layoutManager = LinearLayoutManager(this)
-        adapter = EventsAdapter(this, viewModelImpl.events.value?.data ?: mutableListOf())
+        eventsLayoutManager = LinearLayoutManager(this)
+        eventsAdapter = EventsAdapter(this, viewModelImpl.events.value?.data ?: mutableListOf())
 
-        recyclerViewId.layoutManager = layoutManager
-        recyclerViewId.adapter = adapter
+        recyclerViewId.layoutManager = eventsLayoutManager
+        recyclerViewId.adapter = eventsAdapter
 
-        setNavigationDrawer()
+        initNavigationDrawer()
 
         val eventsObserver = Observer<ResponseWrapper<MutableList<CalendarEvent>>> {
             if (it?.data != null && it.data.isNotEmpty()) {
-                adapter.setData(it.data)
+                eventsAdapter.setData(it.data)
             }
             when (it.status) {
                 "Loading" -> {
@@ -73,22 +76,22 @@ class MainActivity : AppCompatActivity() {
         floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
     }
 
-    private fun setNavigationDrawer() {
-        val navViewLayoutManager = LinearLayoutManager(this)
-        val webCalendarAdapter = CalendarsAdapter(this, viewModelImpl.calendars.value ?: mutableListOf())
-        navigationViewRecyclerView.layoutManager = navViewLayoutManager
-        navigationViewRecyclerView.adapter = webCalendarAdapter
+    private fun initNavigationDrawer() {
+        calendarsLayoutManager = LinearLayoutManager(this)
+        calendarsAdapter = CalendarsAdapter(this, viewModelImpl.calendars.value ?: mutableListOf())
+        navigationViewRecyclerView.layoutManager = calendarsLayoutManager
+        navigationViewRecyclerView.adapter = calendarsAdapter
         val calendarsObserver = Observer<MutableList<WebCalendar>> {
             if (it != null && it.isNotEmpty()) {
-                webCalendarAdapter.setData(it)
+                calendarsAdapter.setData(it)
             }
         }
         viewModelImpl.calendars.observe(this, calendarsObserver)
     }
 
     private fun scrollToMostRecent() {
-        val positionOfEvent = getPositionOfFirstNotFinishedEvent(calendar, adapter.list)
-        (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(
+        val positionOfEvent = getPositionOfFirstNotFinishedEvent(calendar, eventsAdapter.list)
+        (eventsLayoutManager as LinearLayoutManager).scrollToPositionWithOffset(
             positionOfEvent,
             0
         )
