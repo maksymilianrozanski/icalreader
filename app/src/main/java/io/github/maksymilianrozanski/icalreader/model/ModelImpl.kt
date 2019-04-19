@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.data.*
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
+import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -11,24 +12,15 @@ class ModelImpl @Inject constructor(
     val dataSource: EventDao
 ) : Model {
 
-    override fun requestNewData(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {
-        return Observable.concatArray(
-            Observable.just(ResponseWrapper.loading(mutableListOf())),
-            requestCalendarResponseFromApi().doOnNext {
-                if (it.status == "Success") {
-                    replaceSavedEvents(it.data)
-                }
-            }).onErrorReturnItem(ResponseWrapper.error(mutableListOf(), "Other exception"))
-    }
-
     override fun requestCalendarData(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
         return Observable.concatArray(
-            Observable.just(ResponseWrapper.loading(CalendarData(webCalendar, listOf()))),
+            Observable.just(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf()))),
             requestCalendarResponseFromApi(webCalendar).doOnNext {
                 if (it.status == "Success") {
-                    replaceSavedEvents(webCalendar, it.data.events)
+//Saving disabled//                    replaceSavedEvents(webCalendar, it.data.events)
                 }
-            }).onErrorReturnItem(ResponseWrapper.error(CalendarData(webCalendar, listOf()), "Other exception"))
+            }).doOnError { println(it) }
+            .onErrorReturnItem(ResponseWrapper.error(CalendarData(webCalendar, mutableListOf()), "Other exception"))
     }
 
     fun replaceSavedEvents(webCalendar: WebCalendar, events: List<CalendarEvent>) {
@@ -73,16 +65,9 @@ class ModelImpl @Inject constructor(
         dataSource.insertEventsList(eventsCorrectIds)
     }
 
-    override fun requestSavedData(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {
-        return dataSource.getAllEventsSingle().map {
-            val calendarResponse = ResponseWrapper.success(it.toMutableList())
-            calendarResponse
-        }.toObservable()
-    }
-
     override fun requestSavedData(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
         val events = dataSource.getEventsOfCalendar(webCalendar.calendarId)
-        val calendarData = CalendarData(webCalendar, events)
+        val calendarData = CalendarData(webCalendar, events as MutableList<CalendarEvent>)
         val response = ResponseWrapper.success(calendarData)
         return Observable.just(response)
     }
@@ -112,7 +97,7 @@ class ModelImpl @Inject constructor(
                 val successResponse = ResponseWrapper.success(calendarData)
                 successResponse
             } else {
-                ResponseWrapper.error(CalendarData(webCalendar, listOf()), it.code().toString())
+                ResponseWrapper.error(CalendarData(webCalendar, mutableListOf()), it.code().toString())
             }
         }
     }
@@ -125,12 +110,13 @@ class ModelImpl @Inject constructor(
     override fun requestSavedCalendars(): Observable<List<WebCalendar>> {
         return Observable.just(
             listOf(
-                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = "http://example.com"),
+//                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = "http://10.0.2.2:8080/api/test.ical"),
+                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = NetworkModule.baseUrl),
                 WebCalendar(calendarName = "Calendar mock 2", calendarUrl = "http://example2.com"),
                 WebCalendar(calendarName = "Calendar mock 3", calendarUrl = "http://example3.com")
             )
         )
-//        return Observable.just(dataSource.getAllCalendars())
+//  returning data from database disabled //     return Observable.just(dataSource.getAllCalendars())
     }
 
     override fun deleteCalendar(calendar: WebCalendar) {

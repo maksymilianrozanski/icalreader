@@ -2,7 +2,7 @@ package io.github.maksymilianrozanski.icalreader.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
-import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.CalendarData
 import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.Model
@@ -16,13 +16,9 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
     @Inject
     lateinit var model: Model
 
-    val events: MutableLiveData<ResponseWrapper<MutableList<CalendarEvent>>> by lazy {
-        MutableLiveData<ResponseWrapper<MutableList<CalendarEvent>>>()
+    val eventsData: MutableLiveData<ResponseWrapper<CalendarData>> by lazy {
+        MutableLiveData<ResponseWrapper<CalendarData>>()
     }
-
-//    val eventsData: MutableLiveData<ResponseWrapper<CalendarData>> by lazy {
-//        MutableLiveData<ResponseWrapper<CalendarData>>()
-//    }
 
     val calendars: MutableLiveData<MutableList<WebCalendar>> by lazy {
         MutableLiveData<MutableList<WebCalendar>>()
@@ -33,26 +29,6 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
 
     init {
         requestSavedCalendars()
-        requestSavedData()
-    }
-
-//    private fun requestEventsData(){
-//        calendarsSubscription = model.requestSavedCalendars()
-//            .flatMap { model.requestSavedData(it[0]) }
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe {
-//                eventsData.value = it
-//            }
-//    }
-
-    private fun requestSavedData() {
-        subscription = model.requestSavedData()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                events.value = it
-            }
     }
 
     private fun requestSavedCalendars() {
@@ -64,23 +40,32 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
             }
     }
 
-//    private fun requestSavedCalendarData(webCalendar: WebCalendar) {
-//        subscription = model.requestSavedData(webCalendar)
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe {
-//                eventsData.value = it
-//            }
-//    }
-
     fun requestCalendarResponse() {
-        subscription = model.requestNewData()
+        val webCalendarZero = calendars.value!![0]
+        subscription = model.requestSavedCalendars().flatMap {
+            model.requestCalendarData(it[0])
+        }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { events.value = ResponseWrapper.loading(mutableListOf()) }
+            .doOnSubscribe {
+                eventsData.value = ResponseWrapper.loading(CalendarData(webCalendarZero, mutableListOf()))
+            }
             .doOnError { println("Error") }
             .subscribe {
-                events.value = it
+                eventsData.value = it
+            }
+    }
+
+    private fun requestCalendarResponse(webCalendar: WebCalendar) {
+        subscription = model.requestCalendarData(webCalendar)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                eventsData.value = ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf()))
+            }
+            .doOnError { println("Error") }
+            .subscribe {
+                eventsData.value = it
             }
     }
 

@@ -9,6 +9,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
+import io.github.maksymilianrozanski.icalreader.data.CalendarData
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
@@ -43,17 +44,18 @@ class MainActivity : AppCompatActivity() {
 
         viewModelImpl = ViewModelProviders.of(this, viewModelFactory).get(ViewModelImpl::class.java)
         eventsLayoutManager = LinearLayoutManager(this)
-        eventsAdapter = EventsAdapter(this, viewModelImpl.events.value?.data ?: mutableListOf())
 
+        val events: MutableList<CalendarEvent> =
+            if (viewModelImpl.eventsData.value?.data?.events != null) viewModelImpl.eventsData.value?.data?.events
+                    as MutableList<CalendarEvent> else mutableListOf()
+        eventsAdapter = EventsAdapter(this, events)
         recyclerViewId.layoutManager = eventsLayoutManager
         recyclerViewId.adapter = eventsAdapter
 
         initNavigationDrawer()
 
-        val eventsObserver = Observer<ResponseWrapper<MutableList<CalendarEvent>>> {
-            if (it?.data != null && it.data.isNotEmpty()) {
-                eventsAdapter.setData(it.data)
-            }
+        val eventsObserver = Observer<ResponseWrapper<CalendarData>> {
+                eventsAdapter.setData(it.data.events )
             when (it.status) {
                 "Loading" -> {
                     progressBar.isIndeterminate = true
@@ -71,7 +73,7 @@ class MainActivity : AppCompatActivity() {
             }
             Toast.makeText(this, it.status, Toast.LENGTH_LONG).show()
         }
-        viewModelImpl.events.observe(this, eventsObserver)
+        viewModelImpl.eventsData.observe(this, eventsObserver)
 
         floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
     }
