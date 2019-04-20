@@ -13,6 +13,8 @@ interface Model {
 
     fun saveNewCalendar(calendarName: String, url: String)
 
+    fun saveNewCalendar(webCalendar: WebCalendar):Observable<List<WebCalendar>>
+
     fun requestSavedCalendars(): Observable<List<WebCalendar>>
 
     fun deleteCalendar(calendar: WebCalendar)

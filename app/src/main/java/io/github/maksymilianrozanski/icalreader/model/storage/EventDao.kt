@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.icalreader.model.storage
 import androidx.room.*
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
+import io.reactivex.Completable
 import io.reactivex.Single
 
 @Dao
@@ -25,6 +26,9 @@ interface EventDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCalendar(calendar: WebCalendar)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertCalendarSingle(calendar: WebCalendar):Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertEvent(event: CalendarEvent)

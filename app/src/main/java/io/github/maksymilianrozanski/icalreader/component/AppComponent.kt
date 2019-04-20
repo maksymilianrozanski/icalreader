@@ -8,11 +8,14 @@ import io.github.maksymilianrozanski.icalreader.MainActivity
 import io.github.maksymilianrozanski.icalreader.MyApp
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.*
+import io.github.maksymilianrozanski.icalreader.viewmodel.BaseSchedulerProvider
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, ViewModelModule::class, NetworkModule::class, ModelImplModule::class,
-    ICalReaderModule::class, DatabaseModule::class, CalendarModule::class])
+@Component(
+    modules = [AppModule::class, ViewModelModule::class, NetworkModule::class, ModelImplModule::class,
+        ICalReaderModule::class, DatabaseModule::class, CalendarModule::class, SchedulerProviderModule::class]
+)
 interface AppComponent {
 
     fun inject(myApp: MyApp)
@@ -21,11 +24,13 @@ interface AppComponent {
 
     fun inject(modelImpl: Model)
 
-    fun inject(adapter:EventsAdapter)
+    fun inject(adapter: EventsAdapter)
 
     fun getContext(): Context
 
     fun getApplication(): Application
 
     fun getModel(): Model
+
+    fun getSchedulerProvider():BaseSchedulerProvider
 }

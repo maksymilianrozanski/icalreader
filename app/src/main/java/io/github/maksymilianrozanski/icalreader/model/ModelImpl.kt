@@ -17,7 +17,7 @@ class ModelImpl @Inject constructor(
             Observable.just(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf()))),
             requestCalendarResponseFromApi(webCalendar).doOnNext {
                 if (it.status == "Success") {
-//Saving disabled//                    replaceSavedEvents(webCalendar, it.data.events)
+//Saving disabled//                    replaceSavedEvents(hardcodedCalendarToSave, it.data.events)
                 }
             }).doOnError { println(it) }
             .onErrorReturnItem(ResponseWrapper.error(CalendarData(webCalendar, mutableListOf()), "Other exception"))
@@ -107,11 +107,17 @@ class ModelImpl @Inject constructor(
         dataSource.insertCalendar(webCalendar)
     }
 
+    override fun saveNewCalendar(webCalendar: WebCalendar): Observable<List<WebCalendar>> {
+        return Observable.concatArray(
+            dataSource.insertCalendarSingle(webCalendar).toObservable(),
+            dataSource.getAllCalendarsSingle().toObservable()
+        )
+    }
+
     override fun requestSavedCalendars(): Observable<List<WebCalendar>> {
         return Observable.just(
             listOf(
-//                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = "http://10.0.2.2:8080/api/test.ical"),
-                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = NetworkModule.baseUrl),
+                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = NetworkModule.baseUrl + "api/test.ical"),
                 WebCalendar(calendarName = "Calendar mock 2", calendarUrl = "http://example2.com"),
                 WebCalendar(calendarName = "Calendar mock 3", calendarUrl = "http://example3.com")
             )

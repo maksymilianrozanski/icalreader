@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
         viewModelImpl.eventsData.observe(this, eventsObserver)
 
         floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
+        floatingAddButton.setOnClickListener { viewModelImpl.saveNewCalendar() }
     }
 
     private fun initNavigationDrawer() {
