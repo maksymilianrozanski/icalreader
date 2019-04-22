@@ -76,7 +76,12 @@ class MainActivity : AppCompatActivity() {
         viewModelImpl.eventsData.observe(this, eventsObserver)
 
         floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
-        floatingAddButton.setOnClickListener { viewModelImpl.saveNewCalendar() }
+        floatingAddButton.setOnClickListener {
+            val manager = supportFragmentManager
+            val fragment = AddCalendarDialogFragment()
+            fragment.show(manager, "abc")
+//            viewModelImpl.saveNewCalendar()
+        }
     }
 
     private fun initNavigationDrawer() {

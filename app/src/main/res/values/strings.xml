@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ICalReader</string>
+    <string name="calendar_name">Calendar name</string>
+    <string name="calendar_url">Calendar URL</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>
