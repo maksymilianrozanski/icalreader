@@ -3,6 +3,7 @@ package io.github.maksymilianrozanski.icalreader.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import io.github.maksymilianrozanski.icalreader.data.CalendarData
+import io.github.maksymilianrozanski.icalreader.data.CalendarForm
 import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.Model
@@ -24,6 +25,10 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
 
     val calendars: MutableLiveData<MutableList<WebCalendar>> by lazy {
         MutableLiveData<MutableList<WebCalendar>>()
+    }
+
+    val calendarForm: MutableLiveData<CalendarForm> by lazy {
+        MutableLiveData<CalendarForm>()
     }
 
     private lateinit var subscription: Disposable
@@ -59,6 +64,12 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
             }
     }
 
+    fun saveNewCalendarFromLiveData() {
+        println("saveNewCalendar method of ViewModel called")
+        calendarForm.value = CalendarForm("Name edited by VM", "Url edited by VM")
+        //TODO: not implemented
+    }
+
     fun saveNewCalendar() {
         calendarsSubscription = model.saveNewCalendar(hardcodedCalendarToSave)
             .subscribeOn(schedulerProvider.io())
@@ -88,6 +99,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
     }
 
     companion object {
-        val hardcodedCalendarToSave = WebCalendar(calendarName = "Calendar mock 1", calendarUrl = NetworkModule.baseUrl+"api/test.ical")
+        val hardcodedCalendarToSave =
+            WebCalendar(calendarName = "Calendar mock 1", calendarUrl = NetworkModule.baseUrl + "api/test.ical")
     }
 }

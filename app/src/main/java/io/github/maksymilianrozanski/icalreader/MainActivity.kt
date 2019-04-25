@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
     lateinit var calendar: Calendar
-    private lateinit var viewModelImpl: ViewModelImpl
+    lateinit var viewModelImpl: ViewModelImpl
 
     private lateinit var eventsLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
     private lateinit var eventsAdapter: EventsAdapter
@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         initNavigationDrawer()
 
         val eventsObserver = Observer<ResponseWrapper<CalendarData>> {
-                eventsAdapter.setData(it.data.events )
+            eventsAdapter.setData(it.data.events)
             when (it.status) {
                 "Loading" -> {
                     progressBar.isIndeterminate = true
