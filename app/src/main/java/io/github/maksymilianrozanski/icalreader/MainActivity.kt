@@ -15,6 +15,7 @@ import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelFactory
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelImpl
+import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 import javax.inject.Inject
@@ -26,7 +27,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var viewModelFactory: ViewModelFactory
     @Inject
     lateinit var calendar: Calendar
-    lateinit var viewModelImpl: ViewModelImpl
+    lateinit var viewModel: ViewModelInterface
 
     private lateinit var eventsLayoutManager: androidx.recyclerview.widget.RecyclerView.LayoutManager
     private lateinit var eventsAdapter: EventsAdapter
@@ -42,11 +43,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewModelImpl = ViewModelProviders.of(this, viewModelFactory).get(ViewModelImpl::class.java)
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ViewModelImpl::class.java)
         eventsLayoutManager = LinearLayoutManager(this)
 
         val events: MutableList<CalendarEvent> =
-            if (viewModelImpl.eventsData.value?.data?.events != null) viewModelImpl.eventsData.value?.data?.events
+            if (viewModel.eventsData.value?.data?.events != null) viewModel.eventsData.value?.data?.events
                     as MutableList<CalendarEvent> else mutableListOf()
         eventsAdapter = EventsAdapter(this, events)
         recyclerViewId.layoutManager = eventsLayoutManager
@@ -73,20 +74,20 @@ class MainActivity : AppCompatActivity() {
             }
             Toast.makeText(this, it.status, Toast.LENGTH_LONG).show()
         }
-        viewModelImpl.eventsData.observe(this, eventsObserver)
+        viewModel.eventsData.observe(this, eventsObserver)
 
-        floatingRefreshButton.setOnClickListener { viewModelImpl.requestCalendarResponse() }
+        floatingRefreshButton.setOnClickListener { viewModel.requestCalendarResponse() }
         floatingAddButton.setOnClickListener {
             val manager = supportFragmentManager
             val fragment = AddCalendarDialogFragment()
             fragment.show(manager, "abc")
-//            viewModelImpl.saveNewCalendar()
+//            viewModel.saveNewCalendar()
         }
     }
 
     private fun initNavigationDrawer() {
         calendarsLayoutManager = LinearLayoutManager(this)
-        calendarsAdapter = CalendarsAdapter(this, viewModelImpl.calendars.value ?: mutableListOf())
+        calendarsAdapter = CalendarsAdapter(this, viewModel.calendars.value ?: mutableListOf())
         navigationViewRecyclerView.layoutManager = calendarsLayoutManager
         navigationViewRecyclerView.adapter = calendarsAdapter
         val calendarsObserver = Observer<MutableList<WebCalendar>> {
@@ -94,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 calendarsAdapter.setData(it)
             }
         }
-        viewModelImpl.calendars.observe(this, calendarsObserver)
+        viewModel.calendars.observe(this, calendarsObserver)
     }
 
     private fun scrollToMostRecent() {

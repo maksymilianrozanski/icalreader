@@ -28,13 +28,13 @@ class AddCalendarDialogFragment : DialogFragment() {
             calendarUrlEditText.error = it.urlError
             println("inside observer of AddCalendarDialogFragment")
         }
-        (activity as MainActivity).viewModelImpl.calendarForm.observe(this, formObserver)
+        (activity as MainActivity).viewModel.calendarForm.observe(this, formObserver)
 
         view.findViewById<Button>(R.id.saveCalendar).setOnClickListener {
             calendarForm.calendarName = calendarNameEditText.text.toString()
             calendarForm.calendarUrl = calendarUrlEditText.text.toString()
-            (activity as MainActivity).viewModelImpl.calendarForm.value = calendarForm
-            (activity as MainActivity).viewModelImpl.saveNewCalendarFromLiveData()
+            (activity as MainActivity).viewModel.calendarForm.value = calendarForm
+            (activity as MainActivity).viewModel.saveNewCalendarFromLiveData()
         }
 
         view.findViewById<Button>(R.id.cancelCreating).setOnClickListener {

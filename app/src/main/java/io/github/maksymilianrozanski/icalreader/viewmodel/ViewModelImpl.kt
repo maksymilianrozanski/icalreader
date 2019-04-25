@@ -11,7 +11,7 @@ import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
-class ViewModelImpl(application: Application) : BaseViewModel(application) {
+class ViewModelImpl(application: Application) : BaseViewModel(application), ViewModelInterface {
 
     @Inject
     lateinit var model: Model
@@ -19,15 +19,15 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
     @Inject
     lateinit var schedulerProvider: BaseSchedulerProvider
 
-    val eventsData: MutableLiveData<ResponseWrapper<CalendarData>> by lazy {
+    override val eventsData: MutableLiveData<ResponseWrapper<CalendarData>> by lazy {
         MutableLiveData<ResponseWrapper<CalendarData>>()
     }
 
-    val calendars: MutableLiveData<MutableList<WebCalendar>> by lazy {
+    override val calendars: MutableLiveData<MutableList<WebCalendar>> by lazy {
         MutableLiveData<MutableList<WebCalendar>>()
     }
 
-    val calendarForm: MutableLiveData<CalendarForm> by lazy {
+    override val calendarForm: MutableLiveData<CalendarForm> by lazy {
         MutableLiveData<CalendarForm>()
     }
 
@@ -48,7 +48,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
                 }
     }
 
-    fun requestCalendarResponse() {
+    override fun requestCalendarResponse() {
         val webCalendarZero = calendars.value!![0]
         subscription = model.requestSavedCalendars().flatMap {
             model.requestCalendarData(it[0])
@@ -64,12 +64,12 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
             }
     }
 
-    fun saveNewCalendarFromLiveData() {
+    override fun saveNewCalendarFromLiveData() {
         println("saveNewCalendar method of ViewModel called")
         //TODO: not implemented
     }
 
-    fun saveNewCalendar() {
+    override fun saveNewCalendar() {
         calendarsSubscription = model.saveNewCalendar(hardcodedCalendarToSave)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
