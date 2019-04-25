@@ -33,9 +33,10 @@ class UITest {
     val activityRule = ActivityTestRule(MainActivity::class.java, false, false)
 
     lateinit var app: MyApp
-    lateinit var viewModelInterfaceMock: ViewModelInterface
     lateinit var viewModelInterfaceWrapper: ViewModelInterfaceWrapper
 
+    @Mock
+    lateinit var viewModelInterfaceMock: ViewModelInterface
     @Mock
     lateinit var eventsDataMock: MutableLiveData<ResponseWrapper<CalendarData>>
     @Mock
@@ -46,7 +47,7 @@ class UITest {
     @Before
     fun setup() {
         val calendar = Calendar.getInstance()
-        viewModelInterfaceMock = Mockito.mock(ViewModelInterface::class.java)
+        MockitoAnnotations.initMocks(this)
         viewModelInterfaceWrapper = ViewModelInterfaceWrapper(viewModelInterfaceMock)
 
         app = InstrumentationRegistry.getInstrumentation()
@@ -61,8 +62,6 @@ class UITest {
 
         app.appComponent = uiTestAppComponent
         uiTestAppComponent.inject(this)
-
-        MockitoAnnotations.initMocks(this)
 
         Mockito.`when`(viewModelInterfaceMock.eventsData).thenReturn(eventsDataMock)
         Mockito.`when`(viewModelInterfaceMock.calendars).thenReturn(calendarsMock)
@@ -80,7 +79,7 @@ class UITest {
         onView(withId(R.id.calendarUrlEditText)).perform(typeText("http://example.com"))
         onView(withId(R.id.saveCalendar)).perform(click())
 
-        Mockito.verify(calendarFormMock).value = argThat{
+        Mockito.verify(calendarFormMock).value = argThat {
             calendarName == "example name" && calendarUrl == "http://example.com"
         }
         Mockito.verify(viewModelInterfaceMock).saveNewCalendarFromLiveData()
