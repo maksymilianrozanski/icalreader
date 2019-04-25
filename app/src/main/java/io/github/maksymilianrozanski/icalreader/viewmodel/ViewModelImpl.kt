@@ -66,7 +66,6 @@ class ViewModelImpl(application: Application) : BaseViewModel(application) {
 
     fun saveNewCalendarFromLiveData() {
         println("saveNewCalendar method of ViewModel called")
-        calendarForm.value = CalendarForm("Name edited by VM", "Url edited by VM")
         //TODO: not implemented
     }
 

@@ -9,22 +9,30 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import io.github.maksymilianrozanski.icalreader.data.CalendarForm
 import kotlinx.android.synthetic.main.insert_calendar_fragment.*
+import kotlinx.android.synthetic.main.insert_calendar_fragment.view.*
 
 class AddCalendarDialogFragment : DialogFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.insert_calendar_fragment, container)
 
+        val calendarForm = CalendarForm(
+            view.calendarNameEditText.text.toString(),
+            view.calendarUrlEditText.text.toString()
+        )
+
+        val formObserver = Observer<CalendarForm> {
+            calendarNameEditText.setText(it.calendarName)
+            calendarNameEditText.error = it.nameError
+            calendarUrlEditText.setText(it.calendarUrl)
+            calendarUrlEditText.error = it.urlError
+            println("inside observer of AddCalendarDialogFragment")
+        }
+        (activity as MainActivity).viewModelImpl.calendarForm.observe(this, formObserver)
+
         view.findViewById<Button>(R.id.saveCalendar).setOnClickListener {
-            val calendarName = calendarNameEditText.text.toString()
-            val calendarUrl = calendarUrlEditText.text.toString()
-            val calendarForm = CalendarForm(calendarName, calendarUrl)
-            val formObserver = Observer<CalendarForm> {
-                calendarNameEditText.setText(it.calendarName)
-                calendarUrlEditText.setText(it.calendarUrl)
-                println("inside observer of AddCalendarDialogFragment")
-            }
-            (activity as MainActivity).viewModelImpl.calendarForm.observe(this, formObserver)
+            calendarForm.calendarName = calendarNameEditText.text.toString()
+            calendarForm.calendarUrl = calendarUrlEditText.text.toString()
             (activity as MainActivity).viewModelImpl.calendarForm.value = calendarForm
             (activity as MainActivity).viewModelImpl.saveNewCalendarFromLiveData()
         }
