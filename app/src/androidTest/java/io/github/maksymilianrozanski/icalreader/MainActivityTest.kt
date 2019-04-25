@@ -1,11 +1,11 @@
 package io.github.maksymilianrozanski.icalreader
 
-import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions.scrollToPosition
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import io.github.maksymilianrozanski.icalreader.component.DaggerTestAppComponent
 import io.github.maksymilianrozanski.icalreader.module.AppModule
@@ -36,7 +36,7 @@ class MainActivityTest {
         val mockResponse = MockResponse()
         mockResponse.setResponseCode(200)
         val testHelper = AndroidTestHelper()
-        mockResponse.setBody(testHelper.getStringFromFile(InstrumentationRegistry.getContext(), "exampleCalendar.txt"))
+        mockResponse.setBody(testHelper.getStringFromFile(InstrumentationRegistry.getInstrumentation().context, "exampleCalendar.txt"))
         server.enqueue(mockResponse)
 
         app = InstrumentationRegistry.getInstrumentation()

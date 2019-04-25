@@ -1,11 +1,12 @@
 package io.github.maksymilianrozanski.icalreader
 
 import androidx.lifecycle.MutableLiveData
-import androidx.test.InstrumentationRegistry
+
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockitokotlin2.argThat
 import io.github.maksymilianrozanski.icalreader.component.DaggerUITestAppComponent
