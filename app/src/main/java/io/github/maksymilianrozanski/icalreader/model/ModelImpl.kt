@@ -126,13 +126,12 @@ class ModelImpl @Inject constructor(
                 ResponseWrapper.error(calendarForm, it.message)
             }
         } else {
-            Observable.just(ResponseWrapper.error(calendarForm, "Error message"))
+            Observable.just(ResponseWrapper.error(calendarForm, "Invalid input"))
         }
     }
 
     private fun isCalendarFormValid(calendarForm: CalendarForm): Boolean {
-        //TODO: add validation
-        return true
+        return calendarForm.isFormValid()
     }
 
     override fun requestSavedCalendars(): Observable<List<WebCalendar>> {

@@ -332,4 +332,22 @@ class ModelImplTest {
             it.status == "Error" && it.data == calendarForm && it.message == "Database error"
         }
     }
+
+    @Test
+    fun savingNewCalendarFormInvalidUrlTest(){
+        val apiService = Mockito.mock(APIService::class.java)
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
+
+        val calendarForm = CalendarForm("","")
+        calendarForm.calendarName = "name"
+        calendarForm.calendarUrl = "http://invalid url."
+
+        model.saveNewCalendar(calendarForm).test().await().assertValue {
+            it.status == "Error" && it.data.calendarName == "name" && it.data.calendarUrl == "http://invalid url."
+                    && it.data.nameError == null && it.data.urlError == CalendarForm.cannotContainSpaces
+                    && it.message == "Invalid input"
+        }
+    }
 }

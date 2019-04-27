@@ -18,6 +18,10 @@ class CalendarForm(calendarName: String, calendarUrl: String) {
     var nameError: Int? = null
     var urlError: Int? = null
 
+    fun isFormValid(): Boolean {
+        return isNameNotEmpty() && isUrlNotEmpty() && isUrlWithoutSpaces() && isUrlNotEndedWithDot()
+    }
+
     fun isNameNotEmpty(): Boolean {
         return if (calendarName.isNotEmpty()) {
             nameError = null
@@ -62,5 +66,6 @@ class CalendarForm(calendarName: String, calendarUrl: String) {
         const val cannotBeBlank = 1
         const val cannotContainSpaces = 2
         const val cannotEndWithDot = 3
+        const val databaseError = 4
     }
 }
