@@ -67,5 +67,6 @@ class CalendarForm(calendarName: String, calendarUrl: String) {
         const val cannotContainSpaces = 2
         const val cannotEndWithDot = 3
         const val databaseError = 4
+        const val unknownError = 5
     }
 }

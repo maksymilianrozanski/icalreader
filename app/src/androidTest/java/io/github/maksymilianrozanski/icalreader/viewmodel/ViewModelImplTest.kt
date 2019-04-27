@@ -110,4 +110,21 @@ class ViewModelImplTest {
         })
         Assert.assertEquals(calendarReturnedFromModel, viewModel.calendarForm.value)
     }
+
+    @Test
+    fun savingNewCalendarErrorThrownByModelTest() {
+        val savedCalendar = WebCalendar(calendarName = "Mocked calendar first", calendarUrl = "http://example1.com")
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(savedCalendar)))
+
+        val calendarFormToSave = CalendarForm("Mocked calendar to insert", "http://example2.com")
+        given(modelMock.saveNewCalendar(any<CalendarForm>())).willReturn(Observable.error(Throwable("Some error")))
+
+        val viewModel = ViewModelImpl(app)
+        viewModel.saveNewCalendar(calendarFormToSave)
+
+        Mockito.verify(modelMock, timeout(200)).saveNewCalendar(argThat<CalendarForm> {
+            equals(calendarFormToSave)
+        })
+        Assert.assertEquals(CalendarForm.unknownError, calendarFormToSave.nameError)
+    }
 }

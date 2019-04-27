@@ -9,6 +9,7 @@ import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import io.reactivex.disposables.Disposable
+import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
 
 class ViewModelImpl(application: Application) : BaseViewModel(application), ViewModelInterface {
@@ -68,10 +69,15 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
         calendarsSubscription = model.saveNewCalendar(formToSave)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribe {
-                //TODO: display errors to View if not saved successfully
-                calendarForm.postValue(it.data)
-            }
+            .subscribeBy(
+                onNext = {
+                    calendarForm.postValue(it.data)
+                },
+                onError = {
+                    formToSave.nameError = CalendarForm.unknownError
+                    calendarForm.postValue(formToSave)
+                }
+            )
     }
 
     override fun saveNewCalendar() {

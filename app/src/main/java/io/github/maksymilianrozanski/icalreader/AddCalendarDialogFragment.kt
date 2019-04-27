@@ -51,6 +51,7 @@ class AddCalendarDialogFragment : DialogFragment() {
             CalendarForm.cannotContainSpaces -> "Cannot contain spaces"
             CalendarForm.cannotEndWithDot -> "Cannot end with '.'"
             CalendarForm.databaseError -> "Saving to database failed"
+            CalendarForm.unknownError -> "Unknown error"
             else -> null
         }
     }
