@@ -314,4 +314,22 @@ class ModelImplTest {
             it.status == "Success" && it.data == calendarForm
         }
     }
+
+    @Test
+    fun savingNewCalendarFormDbErrorTest() {
+        val apiService = Mockito.mock(APIService::class.java)
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
+
+        val calendarForm = CalendarForm(calendarName = "Example name", calendarUrl = "http://example.com")
+
+        Mockito.`when`(dataSource.insertCalendarSingle(argThat {
+            calendarName == "Example name" && calendarUrl == "http://example.com"
+        })).thenReturn(Completable.error(Throwable("Database error")))
+
+        model.saveNewCalendar(calendarForm).test().await().assertNoErrors().assertValue {
+            it.status == "Error" && it.data == calendarForm && it.message == "Database error"
+        }
+    }
 }
