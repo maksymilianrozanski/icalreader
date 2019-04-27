@@ -1,14 +1,16 @@
 package io.github.maksymilianrozanski.icalreader
 
 import androidx.lifecycle.MutableLiveData
-
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.times
 import io.github.maksymilianrozanski.icalreader.component.DaggerUITestAppComponent
 import io.github.maksymilianrozanski.icalreader.data.CalendarData
 import io.github.maksymilianrozanski.icalreader.data.CalendarForm
@@ -18,6 +20,8 @@ import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.*
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelInterface
 import io.reactivex.schedulers.TestScheduler
+import org.hamcrest.CoreMatchers.containsString
+import org.hamcrest.CoreMatchers.not
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -83,5 +87,24 @@ class UITest {
             calendarName == "example name" && calendarUrl == "http://example.com"
         }
         Mockito.verify(viewModelInterfaceMock).saveNewCalendarFromLiveData()
+    }
+
+    @Test
+    fun blankCalendarNameTest() {
+        val calendarFormObject = MutableLiveData<CalendarForm>()
+        Mockito.`when`(viewModelInterfaceMock.calendarForm).thenReturn(calendarFormObject)
+        activityRule.launchActivity(null)
+        val addCalendarFragment = AddCalendarDialogFragment()
+        val manager = activityRule.activity.supportFragmentManager
+        addCalendarFragment.show(manager, "abc")
+
+        onView(withId(R.id.calendarNameEditText)).perform(click())
+        onView(withId(R.id.calendarUrlEditText)).perform(typeText("http://example.com"))
+        onView(withId(R.id.saveCalendar)).perform(click())
+
+        onView(withId(R.id.calendarNameEditText)).check(matches(hasErrorText("Cannot be blank")))
+        onView(withId(R.id.calendarUrlEditText)).check(matches(not(hasErrorText(containsString("")))))
+
+        Mockito.verify(viewModelInterfaceMock, times(0)).saveNewCalendarFromLiveData()
     }
 }
