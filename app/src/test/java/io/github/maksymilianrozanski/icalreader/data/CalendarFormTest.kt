@@ -1,5 +1,8 @@
 package io.github.maksymilianrozanski.icalreader.data
 
+import io.github.maksymilianrozanski.icalreader.data.CalendarForm.Companion.cannotBeBlank
+import io.github.maksymilianrozanski.icalreader.data.CalendarForm.Companion.cannotContainSpaces
+import io.github.maksymilianrozanski.icalreader.data.CalendarForm.Companion.cannotEndWithDot
 import org.junit.Assert
 import org.junit.Test
 
@@ -18,20 +21,20 @@ class CalendarFormTest {
         calendarForm.calendarName = ""
         Assert.assertEquals("", calendarForm.calendarName)
         Assert.assertEquals(url, calendarForm.calendarUrl)
-        Assert.assertTrue(calendarForm.nameError == "Cannot be blank")
+        Assert.assertTrue(calendarForm.nameError == cannotBeBlank)
         Assert.assertTrue(calendarForm.urlError == null)
 
         calendarForm.calendarUrl = ""
         Assert.assertEquals("", calendarForm.calendarName)
         Assert.assertEquals("", calendarForm.calendarUrl)
-        Assert.assertTrue(calendarForm.nameError == "Cannot be blank")
-        Assert.assertTrue(calendarForm.urlError == "Cannot be blank")
+        Assert.assertTrue(calendarForm.nameError == cannotBeBlank)
+        Assert.assertTrue(calendarForm.urlError == cannotBeBlank)
 
         calendarForm.calendarName = "another name"
         Assert.assertEquals("another name", calendarForm.calendarName)
         Assert.assertEquals("", calendarForm.calendarUrl)
         Assert.assertTrue(calendarForm.nameError == null)
-        Assert.assertTrue(calendarForm.urlError == "Cannot be blank")
+        Assert.assertTrue(calendarForm.urlError == cannotBeBlank)
 
         calendarForm.calendarUrl = "http://example2.com"
         Assert.assertEquals("another name", calendarForm.calendarName)
@@ -57,7 +60,7 @@ class CalendarFormTest {
         val calendarForm = CalendarForm(invalidName, url)
 
         Assert.assertFalse(calendarForm.isNameNotEmpty())
-        Assert.assertTrue(calendarForm.nameError == "Cannot be blank")
+        Assert.assertTrue(calendarForm.nameError == cannotBeBlank)
     }
 
     @Test
@@ -77,7 +80,7 @@ class CalendarFormTest {
         val calendarForm = CalendarForm(name, invalidUrl)
 
         Assert.assertFalse(calendarForm.isUrlNotEmpty())
-        Assert.assertTrue(calendarForm.urlError == "Cannot be blank")
+        Assert.assertTrue(calendarForm.urlError == cannotBeBlank)
     }
 
     @Test
@@ -96,7 +99,7 @@ class CalendarFormTest {
         val calendarForm = CalendarForm(name, invalidUrl)
 
         Assert.assertFalse(calendarForm.isUrlWithoutSpaces())
-        Assert.assertTrue(calendarForm.urlError == "Cannot contain spaces")
+        Assert.assertTrue(calendarForm.urlError == cannotContainSpaces)
     }
 
     @Test
@@ -106,7 +109,7 @@ class CalendarFormTest {
         val calendarForm = CalendarForm(name, invalidUrl)
 
         Assert.assertFalse(calendarForm.isUrlNotEndedWithDot())
-        Assert.assertTrue(calendarForm.urlError == "Cannot end with '.'")
+        Assert.assertTrue(calendarForm.urlError == cannotEndWithDot)
     }
 
     @Test
@@ -124,6 +127,6 @@ class CalendarFormTest {
 
         val withSpacesAndDot = "http://example .com."
         calendarForm.calendarUrl = withSpacesAndDot
-        Assert.assertTrue(calendarForm.urlError == "Cannot contain spaces")
+        Assert.assertTrue(calendarForm.urlError == cannotContainSpaces)
     }
 }

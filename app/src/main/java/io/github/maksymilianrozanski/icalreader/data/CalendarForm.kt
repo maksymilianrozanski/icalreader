@@ -15,15 +15,15 @@ class CalendarForm(calendarName: String, calendarUrl: String) {
             isUrlNotEmpty() && isUrlWithoutSpaces() && isUrlNotEndedWithDot()
         }
 
-    var nameError: String? = null
-    var urlError: String? = null
+    var nameError: Int? = null
+    var urlError: Int? = null
 
     fun isNameNotEmpty(): Boolean {
         return if (calendarName.isNotEmpty()) {
             nameError = null
             true
         } else {
-            nameError = "Cannot be blank"
+            nameError = cannotBeBlank
             false
         }
     }
@@ -33,7 +33,7 @@ class CalendarForm(calendarName: String, calendarUrl: String) {
             urlError = null
             true
         } else {
-            urlError = "Cannot be blank"
+            urlError = cannotBeBlank
             false
         }
     }
@@ -43,18 +43,24 @@ class CalendarForm(calendarName: String, calendarUrl: String) {
             urlError = null
             true
         } else {
-            urlError = "Cannot contain spaces"
+            urlError = cannotContainSpaces
             false
         }
     }
 
-    fun isUrlNotEndedWithDot():Boolean {
+    fun isUrlNotEndedWithDot(): Boolean {
         return if (calendarUrl.endsWith(".")) {
-            urlError = "Cannot end with '.'"
+            urlError = cannotEndWithDot
             false
         } else {
             urlError = null
             true
         }
+    }
+
+    companion object {
+        const val cannotBeBlank = 1
+        const val cannotContainSpaces = 2
+        const val cannotEndWithDot = 3
     }
 }
