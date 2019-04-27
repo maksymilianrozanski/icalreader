@@ -9,6 +9,7 @@ import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.times
 import io.github.maksymilianrozanski.icalreader.component.DaggerUITestAppComponent
@@ -86,7 +87,9 @@ class UITest {
         Mockito.verify(calendarFormMock).value = argThat {
             calendarName == "example name" && calendarUrl == "http://example.com"
         }
-        Mockito.verify(viewModelInterfaceMock).saveNewCalendarFromLiveData()
+        Mockito.verify(viewModelInterfaceMock).saveNewCalendar(argThat<CalendarForm> {
+            calendarName == "example name" && calendarUrl == "http://example.com"
+        })
     }
 
     @Test
@@ -105,6 +108,6 @@ class UITest {
         onView(withId(R.id.calendarNameEditText)).check(matches(hasErrorText("Cannot be blank")))
         onView(withId(R.id.calendarUrlEditText)).check(matches(not(hasErrorText(containsString("")))))
 
-        Mockito.verify(viewModelInterfaceMock, times(0)).saveNewCalendarFromLiveData()
+        Mockito.verify(viewModelInterfaceMock, times(0)).saveNewCalendar(any())
     }
 }

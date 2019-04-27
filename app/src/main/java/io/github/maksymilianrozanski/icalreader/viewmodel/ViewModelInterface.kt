@@ -12,6 +12,6 @@ interface ViewModelInterface {
     val calendars: MutableLiveData<MutableList<WebCalendar>>
     val calendarForm: MutableLiveData<CalendarForm>
     fun requestCalendarResponse()
-    fun saveNewCalendarFromLiveData()
+    fun saveNewCalendar(formToSave: CalendarForm)
     fun saveNewCalendar()
 }

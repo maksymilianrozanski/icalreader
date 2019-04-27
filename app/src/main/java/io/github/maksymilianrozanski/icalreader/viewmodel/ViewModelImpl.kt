@@ -64,9 +64,14 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             }
     }
 
-    override fun saveNewCalendarFromLiveData() {
-        println("saveNewCalendar method of ViewModel called")
-        //TODO: not implemented
+    override fun saveNewCalendar(formToSave: CalendarForm) {
+        calendarsSubscription = model.saveNewCalendar(formToSave)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe {
+                //TODO: display errors to View if not saved successfully
+                calendarForm.postValue(it.data)
+            }
     }
 
     override fun saveNewCalendar() {

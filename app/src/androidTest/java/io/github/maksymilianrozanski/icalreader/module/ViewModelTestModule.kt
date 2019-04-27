@@ -51,8 +51,8 @@ class ViewModelInterfaceWrapper(val viewModelInterface: ViewModelInterface) : Vi
         viewModelInterface.requestCalendarResponse()
     }
 
-    override fun saveNewCalendarFromLiveData() {
-        viewModelInterface.saveNewCalendarFromLiveData()
+    override fun saveNewCalendar(formToSave: CalendarForm) {
+        viewModelInterface.saveNewCalendar(formToSave)
     }
 
     override fun saveNewCalendar() {

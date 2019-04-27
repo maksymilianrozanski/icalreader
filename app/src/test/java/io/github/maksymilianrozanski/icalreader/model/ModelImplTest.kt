@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.timeout
 import io.github.maksymilianrozanski.icalreader.TestHelper
 import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
+import io.github.maksymilianrozanski.icalreader.data.CalendarForm
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.github.maksymilianrozanski.icalreader.module.NetworkTestModule
@@ -293,6 +294,24 @@ class ModelImplTest {
 
         model.saveNewCalendar(webCalendar).test().await().assertNoErrors().assertValue {
             it == listOf(webCalendar)
+        }
+    }
+
+    @Test
+    fun savingNewCalendarFormTest() {
+        val apiService = Mockito.mock(APIService::class.java)
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
+
+        val calendarForm = CalendarForm(calendarName = "Example name", calendarUrl = "http://example.com")
+
+        Mockito.`when`(dataSource.insertCalendarSingle(argThat {
+            calendarName == "Example name" && calendarUrl == "http://example.com"
+        })).thenReturn(Completable.complete())
+
+        model.saveNewCalendar(calendarForm).test().await().assertNoErrors().assertValue {
+            it.status == "Success" && it.data == calendarForm
         }
     }
 }

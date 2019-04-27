@@ -34,8 +34,8 @@ class AddCalendarDialogFragment : DialogFragment() {
             calendarForm.calendarName = calendarNameEditText.text.toString()
             calendarForm.calendarUrl = calendarUrlEditText.text.toString()
             (activity as MainActivity).viewModel.calendarForm.value = calendarForm
-            if (calendarForm.nameError == null && calendarForm.urlError == null){
-                (activity as MainActivity).viewModel.saveNewCalendarFromLiveData()
+            if (calendarForm.nameError == null && calendarForm.urlError == null) {
+                (activity as MainActivity).viewModel.saveNewCalendar(calendarForm)
             }
         }
 

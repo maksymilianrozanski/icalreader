@@ -1,6 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.data.CalendarData
+import io.github.maksymilianrozanski.icalreader.data.CalendarForm
 import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.reactivex.Observable
@@ -13,7 +14,9 @@ interface Model {
 
     fun saveNewCalendar(calendarName: String, url: String)
 
-    fun saveNewCalendar(webCalendar: WebCalendar):Observable<List<WebCalendar>>
+    fun saveNewCalendar(webCalendar: WebCalendar): Observable<List<WebCalendar>>
+
+    fun saveNewCalendar(calendarForm: CalendarForm): Observable<ResponseWrapper<CalendarForm>>
 
     fun requestSavedCalendars(): Observable<List<WebCalendar>>
 

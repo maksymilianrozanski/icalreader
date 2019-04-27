@@ -114,6 +114,25 @@ class ModelImpl @Inject constructor(
         )
     }
 
+    override fun saveNewCalendar(calendarForm: CalendarForm): Observable<ResponseWrapper<CalendarForm>> {
+        if (isCalendarFormValid(calendarForm)) {
+            val webCalendar =
+                WebCalendar(calendarName = calendarForm.calendarName, calendarUrl = calendarForm.calendarUrl)
+            //TODO: check is saving to database successful, return error if is not
+            return Observable.concatArray(
+                dataSource.insertCalendarSingle(webCalendar).toObservable(),
+                Observable.just(ResponseWrapper.success(calendarForm))
+            )
+        } else {
+            return Observable.just(ResponseWrapper.error(calendarForm, "Error message"))
+        }
+    }
+
+    private fun isCalendarFormValid(calendarForm: CalendarForm): Boolean {
+        //TODO: add validation
+        return true
+    }
+
     override fun requestSavedCalendars(): Observable<List<WebCalendar>> {
         return Observable.just(
             listOf(
