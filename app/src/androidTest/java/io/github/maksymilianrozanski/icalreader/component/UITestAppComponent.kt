@@ -6,7 +6,10 @@ import io.github.maksymilianrozanski.icalreader.module.*
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, ViewModelTestModule::class, CalendarTestModule::class, ModelImplTestModule::class, SchedulerProviderTestModule::class])
+@Component(
+    modules = [AppModule::class, ViewModelTestModule::class, CalendarTestModule::class,
+        ModelImplTestModule::class, TrampolineSchedulerProviderTestModule::class]
+)
 interface UITestAppComponent : AppComponent {
 
     fun inject(test: UITest)

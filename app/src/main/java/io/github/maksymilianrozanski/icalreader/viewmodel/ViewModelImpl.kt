@@ -72,6 +72,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             .subscribeBy(
                 onNext = {
                     calendarForm.postValue(it.data)
+                    requestSavedCalendars()
                 },
                 onError = {
                     formToSave.nameError = CalendarForm.unknownError

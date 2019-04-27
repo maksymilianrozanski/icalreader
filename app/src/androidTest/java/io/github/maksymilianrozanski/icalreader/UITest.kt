@@ -20,7 +20,6 @@ import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.*
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelInterface
-import io.reactivex.schedulers.TestScheduler
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
 import org.junit.Before
@@ -62,7 +61,7 @@ class UITest {
             .calendarTestModule(CalendarTestModule(calendar))
             .viewModelTestModule(ViewModelTestModule(viewModelInterfaceWrapper))
             .modelImplTestModule(ModelImplTestModule(Mockito.mock(Model::class.java)))
-            .schedulerProviderTestModule(SchedulerProviderTestModule(TestScheduler()))
+            .trampolineSchedulerProviderTestModule(TrampolineSchedulerProviderTestModule())
             .build()
 
         app.appComponent = uiTestAppComponent

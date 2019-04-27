@@ -2,7 +2,6 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.data.*
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
-import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -135,14 +134,7 @@ class ModelImpl @Inject constructor(
     }
 
     override fun requestSavedCalendars(): Observable<List<WebCalendar>> {
-        return Observable.just(
-            listOf(
-                WebCalendar(calendarName = "Calendar mock 1", calendarUrl = NetworkModule.baseUrl + "api/test.ical"),
-                WebCalendar(calendarName = "Calendar mock 2", calendarUrl = "http://example2.com"),
-                WebCalendar(calendarName = "Calendar mock 3", calendarUrl = "http://example3.com")
-            )
-        )
-//  returning data from database disabled //     return Observable.just(dataSource.getAllCalendars())
+        return dataSource.getAllCalendarsSingle().toObservable()
     }
 
     override fun deleteCalendar(calendar: WebCalendar) {
