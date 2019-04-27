@@ -330,6 +330,7 @@ class ModelImplTest {
 
         model.saveNewCalendar(calendarForm).test().await().assertNoErrors().assertValue {
             it.status == "Error" && it.data == calendarForm && it.message == "Database error"
+                    && it.data.nameError == CalendarForm.databaseError
         }
     }
 

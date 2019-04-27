@@ -118,11 +118,11 @@ class ModelImpl @Inject constructor(
         return if (isCalendarFormValid(calendarForm)) {
             val webCalendar =
                 WebCalendar(calendarName = calendarForm.calendarName, calendarUrl = calendarForm.calendarUrl)
-            //TODO: check is saving to database successful, return error if is not
             Observable.concatArray(
                 dataSource.insertCalendarSingle(webCalendar).toObservable(),
                 Observable.just(ResponseWrapper.success(calendarForm))
             ).onErrorReturn {
+                calendarForm.nameError = CalendarForm.databaseError
                 ResponseWrapper.error(calendarForm, it.message)
             }
         } else {
