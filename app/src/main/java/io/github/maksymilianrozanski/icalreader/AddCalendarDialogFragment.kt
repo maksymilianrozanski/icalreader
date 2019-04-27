@@ -23,19 +23,9 @@ class AddCalendarDialogFragment : DialogFragment() {
 
         val formObserver = Observer<CalendarForm> {
             calendarNameEditText.setText(it.calendarName)
-            calendarNameEditText.error = when (it.nameError) {
-                1 -> "Cannot be blank"
-                2 -> "Cannot contain spaces"
-                3 -> "Cannot end with '.'"
-                else -> null
-            }
+            calendarNameEditText.error = errorMessage(it.nameError)
             calendarUrlEditText.setText(it.calendarUrl)
-            calendarUrlEditText.error = when (it.urlError){
-                1 -> "Cannot be blank"
-                2 -> "Cannot contain spaces"
-                3 -> "Cannot end with '.'"
-                else -> null
-            }
+            calendarUrlEditText.error = errorMessage(it.urlError)
             println("inside observer of AddCalendarDialogFragment")
         }
         (activity as MainActivity).viewModel.calendarForm.observe(this, formObserver)
@@ -53,5 +43,14 @@ class AddCalendarDialogFragment : DialogFragment() {
             dismiss()
         }
         return view
+    }
+
+    private fun errorMessage(int: Int?): String? {
+        return when (int) {
+            CalendarForm.cannotBeBlank -> "Cannot be blank"
+            CalendarForm.cannotContainSpaces -> "Cannot contain spaces"
+            CalendarForm.cannotEndWithDot -> "Cannot end with '.'"
+            else -> null
+        }
     }
 }
