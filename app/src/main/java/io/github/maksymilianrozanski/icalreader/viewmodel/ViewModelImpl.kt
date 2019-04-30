@@ -85,25 +85,51 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             }
             .doOnError { println("Error") }
             .subscribe {
-                //loading the same calendar, success or number of events > 0
-                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId && (it.status == "Success" || it.data.events.size > 0)) {
-                    eventsData.postValue(it)
-                }
-                //the same calendar, status "Error", empty events list -> display old data with error status
-                else if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId && (it.status == "Error")) {
-                    eventsData.postValue(
-                        ResponseWrapper.error(
-                            CalendarData(
-                                webCalendar,
-                                eventsData.value?.data?.events ?: mutableListOf()
-                            ), it.message
-                        )
-                    )
-                } else {
-                    //displaying other calendar
+                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
+                    postNewEventsIfAvailable(it)
+                } else {//displaying other calendar
                     eventsData.postValue(it)
                 }
             }
+    }
+
+    private fun postNewEventsIfAvailable(response: ResponseWrapper<CalendarData>) {
+        val webCalendar = response.data.webCalendar
+        when (response.status) {
+            "Success" -> eventsData.postValue(response)
+            "Error" -> if (response.data.events.size > 0) {
+                eventsData.postValue(
+                    ResponseWrapper.error(
+                        CalendarData(webCalendar, response.data.events),
+                        response.message
+                    )
+                )
+            } else {
+                eventsData.postValue(
+                    ResponseWrapper.error(
+                        CalendarData(webCalendar, eventsData.value?.data?.events ?: mutableListOf()),
+                        response.message
+                    )
+                )
+            }
+            "Loading" -> if (response.data.events.size > 0) {
+                eventsData.postValue(
+                    ResponseWrapper.loading(
+                        CalendarData(webCalendar, response.data.events)
+                    )
+                )
+            } else {
+                eventsData.postValue(
+                    ResponseWrapper.loading(
+                        CalendarData(
+                            webCalendar,
+                            eventsData.value?.data?.events ?: mutableListOf()
+                        )
+                    )
+                )
+            }
+            else -> eventsData.postValue(response)
+        }
     }
 
     override fun saveNewCalendar(formToSave: CalendarForm) {
