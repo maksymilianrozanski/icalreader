@@ -217,7 +217,40 @@ class ViewModelImplTest {
         )
     }
 
-    //TODO: add test: refreshing the same calendar, error with data
+    @Test
+    fun refreshingDataErrorWithDataTest() {
+        val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
+        val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        val event1 = CalendarEvent(
+            calendarId = secondCalendar.calendarId, title = "First title",
+            dateStart = Date(1328209200000L), dateEnd = Date(1328216400000), description = "Description",
+            location = "Location"
+        )
+        val event2 = CalendarEvent(
+            calendarId = secondCalendar.calendarId, title = "Second title",
+            dateStart = Date(1544612400000L), dateEnd = Date(1544626800000L),
+            description = "Description2", location = "Location2"
+        )
+
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
+
+        val publishSubject: PublishSubject<ResponseWrapper<CalendarData>> = PublishSubject.create()
+        given(modelMock.requestCalendarData(secondCalendar)).willReturn(publishSubject)
+
+        val viewModel = ViewModelImpl(app)
+        viewModel.eventsData.value = ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(event1)))
+        viewModel.requestCalendarResponse(secondCalendar)
+
+        Mockito.verify(modelMock).requestCalendarData(argThat { equals(secondCalendar) })
+        Assert.assertEquals(
+            ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf(event1))),
+            viewModel.eventsData.value
+        )
+
+        publishSubject.onNext(ResponseWrapper.error(CalendarData(secondCalendar, mutableListOf(event1, event2)), "500"))
+        Assert.assertEquals(ResponseWrapper.error(CalendarData(secondCalendar, mutableListOf(event1,event2)),"500"),
+            viewModel.eventsData.value)
+    }
 
     @Test
     fun refreshingDataSuccessTest() {
