@@ -142,27 +142,19 @@ class ViewModelImplTest {
         )
         given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
 
-        val publishSubject: PublishSubject<Boolean> = PublishSubject.create()
+        val publishSubject: PublishSubject<ResponseWrapper<CalendarData>> = PublishSubject.create()
 
-        given(modelMock.requestCalendarData(secondCalendar)).willReturn(
-            Observable.just(
-                ResponseWrapper.success(
-                    CalendarData(secondCalendar, mutableListOf(event1))
-                )
-            ).delaySubscription(publishSubject)
-        )
+        given(modelMock.requestCalendarData(secondCalendar)).willReturn(publishSubject)
 
         val viewModel = ViewModelImpl(app)
         viewModel.requestCalendarResponse(secondCalendar)
 
         Mockito.verify(modelMock).requestCalendarData(argThat { equals(secondCalendar) })
         Assert.assertEquals(
-            ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf())),
-            viewModel.eventsData.value
+            ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf())), viewModel.eventsData.value
         )
 
-        publishSubject.onComplete()
-
+        publishSubject.onNext(ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(event1))))
         Assert.assertEquals(
             ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(event1))),
             viewModel.eventsData.value
