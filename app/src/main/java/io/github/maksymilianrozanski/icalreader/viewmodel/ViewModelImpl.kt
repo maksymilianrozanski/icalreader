@@ -94,41 +94,28 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
     }
 
     private fun postNewEventsIfAvailable(response: ResponseWrapper<CalendarData>) {
-        val webCalendar = response.data.webCalendar
-        when (response.status) {
-            "Success" -> eventsData.postValue(response)
-            "Error" -> if (response.data.events.size > 0) {
-                eventsData.postValue(
-                    ResponseWrapper.error(
-                        CalendarData(webCalendar, response.data.events),
-                        response.message
-                    )
-                )
-            } else {
-                eventsData.postValue(
-                    ResponseWrapper.error(
-                        CalendarData(webCalendar, eventsData.value?.data?.events ?: mutableListOf()),
-                        response.message
-                    )
-                )
-            }
-            "Loading" -> if (response.data.events.size > 0) {
-                eventsData.postValue(
-                    ResponseWrapper.loading(
-                        CalendarData(webCalendar, response.data.events)
-                    )
-                )
-            } else {
-                eventsData.postValue(
-                    ResponseWrapper.loading(
-                        CalendarData(
-                            webCalendar,
-                            eventsData.value?.data?.events ?: mutableListOf()
+        when (response.data.events.size > 0) {
+            true -> eventsData.postValue(response)
+            false -> {
+                when (response.status) {
+                    "Success" -> eventsData.postValue(response)
+                    "Error" -> eventsData.postValue(
+                        ResponseWrapper.error(
+                            CalendarData(
+                                response.data.webCalendar, eventsData.value?.data?.events ?: mutableListOf()),
+                            response.message
                         )
                     )
-                )
+                    "Loading" -> eventsData.postValue(
+                        ResponseWrapper.loading(
+                            CalendarData(
+                                response.data.webCalendar,
+                                eventsData.value?.data?.events ?: mutableListOf()
+                            )
+                        )
+                    )
+                }
             }
-            else -> eventsData.postValue(response)
         }
     }
 
