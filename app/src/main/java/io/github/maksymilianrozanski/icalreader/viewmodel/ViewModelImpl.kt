@@ -65,6 +65,19 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             }
     }
 
+    override fun requestCalendarResponse(webCalendar: WebCalendar) {
+        subscription = model.requestCalendarData(webCalendar)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .doOnSubscribe {
+                eventsData.postValue(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf())))
+            }
+            .doOnError { println("Error") }
+            .subscribe {
+                eventsData.postValue(it)
+            }
+    }
+
     override fun saveNewCalendar(formToSave: CalendarForm) {
         calendarsSubscription = model.saveNewCalendar(formToSave)
             .subscribeOn(schedulerProvider.io())
@@ -90,18 +103,6 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             }
     }
 
-    private fun requestCalendarResponse(webCalendar: WebCalendar) {
-        subscription = model.requestCalendarData(webCalendar)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .doOnSubscribe {
-                eventsData.value = ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf()))
-            }
-            .doOnError { println("Error") }
-            .subscribe {
-                eventsData.value = it
-            }
-    }
 
     override fun onCleared() {
         super.onCleared()

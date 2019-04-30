@@ -1,5 +1,6 @@
 package io.github.maksymilianrozanski.icalreader.viewmodel
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockitokotlin2.any
@@ -8,12 +9,11 @@ import dagger.Component
 import io.github.maksymilianrozanski.icalreader.MainActivity
 import io.github.maksymilianrozanski.icalreader.MyApp
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
-import io.github.maksymilianrozanski.icalreader.data.CalendarForm
-import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
-import io.github.maksymilianrozanski.icalreader.data.WebCalendar
+import io.github.maksymilianrozanski.icalreader.data.*
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.*
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
@@ -38,6 +38,9 @@ class ViewModelImplTest {
     @Rule
     @JvmField
     var activityRule = ActivityTestRule(MainActivity::class.java, false, false)
+
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var app: MyApp
     private lateinit var modelMock: Model
@@ -126,5 +129,43 @@ class ViewModelImplTest {
             equals(calendarFormToSave)
         })
         Assert.assertEquals(CalendarForm.unknownError, calendarFormToSave.nameError)
+    }
+
+    @Test
+    fun requestCalendarResponseTest() {
+        val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
+        val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        val event1 = CalendarEvent(
+            calendarId = secondCalendar.calendarId, title = "First title",
+            dateStart = Date(1328209200000L), dateEnd = Date(1328216400000), description = "Description",
+            location = "Location"
+        )
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
+
+        val publishSubject: PublishSubject<Boolean> = PublishSubject.create()
+
+        given(modelMock.requestCalendarData(secondCalendar)).willReturn(
+            Observable.just(
+                ResponseWrapper.success(
+                    CalendarData(secondCalendar, mutableListOf(event1))
+                )
+            ).delaySubscription(publishSubject)
+        )
+
+        val viewModel = ViewModelImpl(app)
+        viewModel.requestCalendarResponse(secondCalendar)
+
+        Mockito.verify(modelMock).requestCalendarData(argThat { equals(secondCalendar) })
+        Assert.assertEquals(
+            ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf())),
+            viewModel.eventsData.value
+        )
+
+        publishSubject.onComplete()
+
+        Assert.assertEquals(
+            ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(event1))),
+            viewModel.eventsData.value
+        )
     }
 }
