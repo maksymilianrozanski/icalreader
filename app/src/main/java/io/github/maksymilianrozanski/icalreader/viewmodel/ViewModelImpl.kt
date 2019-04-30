@@ -70,11 +70,39 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe {
-                eventsData.postValue(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf())))
+                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
+                    eventsData.postValue(
+                        ResponseWrapper.loading(
+                            CalendarData(
+                                webCalendar,
+                                eventsData.value?.data?.events ?: mutableListOf()
+                            )
+                        )
+                    )
+                } else {
+                    eventsData.postValue(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf())))
+                }
             }
             .doOnError { println("Error") }
             .subscribe {
-                eventsData.postValue(it)
+                //loading the same calendar, success or number of events > 0
+                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId && (it.status == "Success" || it.data.events.size > 0)) {
+                    eventsData.postValue(it)
+                }
+                //the same calendar, status "Error", empty events list -> display old data with error status
+                else if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId && (it.status == "Error")) {
+                    eventsData.postValue(
+                        ResponseWrapper.error(
+                            CalendarData(
+                                webCalendar,
+                                eventsData.value?.data?.events ?: mutableListOf()
+                            ), it.message
+                        )
+                    )
+                } else {
+                    //displaying other calendar
+                    eventsData.postValue(it)
+                }
             }
     }
 
