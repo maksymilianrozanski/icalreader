@@ -124,16 +124,6 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             )
     }
 
-    override fun saveNewCalendar() {
-        calendarsSubscription = model.saveNewCalendar(hardcodedCalendarToSave)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .subscribe {
-                calendars.postValue(it as MutableList<WebCalendar>)
-            }
-    }
-
-
     override fun onCleared() {
         super.onCleared()
         subscription.dispose()

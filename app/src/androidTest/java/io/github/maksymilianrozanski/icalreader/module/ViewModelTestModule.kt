@@ -58,8 +58,4 @@ class ViewModelInterfaceWrapper(val viewModelInterface: ViewModelInterface) : Vi
     override fun saveNewCalendar(formToSave: CalendarForm) {
         viewModelInterface.saveNewCalendar(formToSave)
     }
-
-    override fun saveNewCalendar() {
-        viewModelInterface.saveNewCalendar()
-    }
 }

@@ -61,36 +61,6 @@ class ViewModelImplTest {
     }
 
     @Test
-    fun saveNewCalendarTest() {
-        val firstCalendar = WebCalendar(calendarName = "Mocked calendar first", calendarUrl = "http://example1.com")
-        val insertedCalendar =
-            ViewModelImpl.hardcodedCalendarToSave
-
-        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar)))
-        given(modelMock.saveNewCalendar(ViewModelImpl.hardcodedCalendarToSave)).willReturn(
-            Observable.just(
-                listOf(
-                    firstCalendar,
-                    insertedCalendar
-                )
-            )
-        )
-
-        val viewModel = ViewModelImpl(app)
-
-        Mockito.verify(modelMock, timeout(200)).requestSavedCalendars()
-        Assert.assertEquals(1, viewModel.calendars.value?.size)
-        Assert.assertEquals(mutableListOf(firstCalendar), viewModel.calendars.value)
-
-        viewModel.saveNewCalendar()
-
-        Mockito.verify(modelMock, timeout(200)).saveNewCalendar(argThat<WebCalendar> {
-            equals(ViewModelImpl.hardcodedCalendarToSave)
-        })
-        Assert.assertEquals(2, viewModel.calendars.value?.size)
-    }
-
-    @Test
     fun saveNewCalendarSuccessTest() {
         val savedCalendar = WebCalendar(calendarName = "Mocked calendar first", calendarUrl = "http://example1.com")
         given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(savedCalendar)))

@@ -14,5 +14,4 @@ interface ViewModelInterface {
     fun requestCalendarResponse()
     fun requestCalendarResponse(webCalendar: WebCalendar)
     fun saveNewCalendar(formToSave: CalendarForm)
-    fun saveNewCalendar()
 }
