@@ -12,8 +12,6 @@ interface Model {
 
     fun requestSavedData(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>>
 
-    fun saveNewCalendar(calendarName: String, url: String)
-
     fun saveNewCalendar(webCalendar: WebCalendar): Observable<List<WebCalendar>>
 
     fun saveNewCalendar(calendarForm: CalendarForm): Observable<ResponseWrapper<CalendarForm>>

@@ -101,11 +101,6 @@ class ModelImpl @Inject constructor(
         }
     }
 
-    override fun saveNewCalendar(calendarName: String, url: String) {
-        val webCalendar = WebCalendar(calendarName = calendarName, calendarUrl = url)
-        dataSource.insertCalendar(webCalendar)
-    }
-
     override fun saveNewCalendar(webCalendar: WebCalendar): Observable<List<WebCalendar>> {
         return Observable.concatArray(
             dataSource.insertCalendarSingle(webCalendar).toObservable(),
