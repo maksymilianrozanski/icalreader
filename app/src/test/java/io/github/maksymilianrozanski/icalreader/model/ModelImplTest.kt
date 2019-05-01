@@ -12,7 +12,6 @@ import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.github.maksymilianrozanski.icalreader.module.NetworkTestModule
 import io.reactivex.Completable
-import io.reactivex.Single
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert
@@ -279,22 +278,6 @@ class ModelImplTest {
                         && it[1].description == eventFromApiTwo.description
                         && it[1].location == eventFromApiTwo.location
             })
-    }
-
-    @Test
-    fun savingCalendarTest() {
-        val apiService = Mockito.mock(APIService::class.java)
-        val iCalReader = Mockito.mock(ICalReader::class.java)
-        val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
-
-        val webCalendar = WebCalendar(calendarName = "Example name", calendarUrl = "http://example.com")
-        Mockito.`when`(dataSource.insertCalendarSingle(webCalendar)).thenReturn(Completable.complete())
-        Mockito.`when`(dataSource.getAllCalendarsSingle()).thenReturn(Single.just(listOf(webCalendar)))
-
-        model.saveNewCalendar(webCalendar).test().await().assertNoErrors().assertValue {
-            it == listOf(webCalendar)
-        }
     }
 
     @Test

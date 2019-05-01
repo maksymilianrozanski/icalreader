@@ -101,13 +101,6 @@ class ModelImpl @Inject constructor(
         }
     }
 
-    override fun saveNewCalendar(webCalendar: WebCalendar): Observable<List<WebCalendar>> {
-        return Observable.concatArray(
-            dataSource.insertCalendarSingle(webCalendar).toObservable(),
-            dataSource.getAllCalendarsSingle().toObservable()
-        )
-    }
-
     override fun saveNewCalendar(calendarForm: CalendarForm): Observable<ResponseWrapper<CalendarForm>> {
         return if (isCalendarFormValid(calendarForm)) {
             val webCalendar =
