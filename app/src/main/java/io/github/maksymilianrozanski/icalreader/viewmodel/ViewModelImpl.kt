@@ -53,8 +53,37 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
         requestCalendarResponse(eventsData.value?.data?.webCalendar ?: calendars.value?.get(0) ?: return)
     }
 
+    //TODO: remove duplicate code
     override fun requestCalendarResponse(webCalendar: WebCalendar) {
         subscription = model.requestCalendarData(webCalendar)
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .doOnSubscribe {
+                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
+                    eventsData.postValue(
+                        ResponseWrapper.loading(
+                            CalendarData(
+                                webCalendar,
+                                eventsData.value?.data?.events ?: mutableListOf()
+                            )
+                        )
+                    )
+                } else {
+                    eventsData.postValue(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf())))
+                }
+            }
+            .doOnError { println("Error") }
+            .subscribe {
+                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
+                    postNewEventsIfAvailable(it)
+                } else {//displaying other calendar
+                    eventsData.postValue(it)
+                }
+            }
+    }
+
+    override fun requestSavedCalendarData(webCalendar: WebCalendar) {
+        subscription = model.requestSavedData(webCalendar)
             .subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe {

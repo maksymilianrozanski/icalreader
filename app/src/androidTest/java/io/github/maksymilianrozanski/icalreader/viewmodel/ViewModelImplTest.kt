@@ -132,6 +132,36 @@ class ViewModelImplTest {
     }
 
     @Test
+    fun requestSavedCalendarDataSuccessTest(){
+        val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
+        val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        val event1 = CalendarEvent(
+            calendarId = secondCalendar.calendarId, title = "First title",
+            dateStart = Date(1328209200000L), dateEnd = Date(1328216400000), description = "Description",
+            location = "Location"
+        )
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
+
+        val publishSubject: PublishSubject<ResponseWrapper<CalendarData>> = PublishSubject.create()
+
+        given(modelMock.requestSavedData(secondCalendar)).willReturn(publishSubject)
+
+        val viewModel = ViewModelImpl(app)
+        viewModel.requestSavedCalendarData(secondCalendar)
+
+        Mockito.verify(modelMock).requestSavedData(argThat { equals(secondCalendar) })
+        Assert.assertEquals(
+            ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf())), viewModel.eventsData.value
+        )
+
+        publishSubject.onNext(ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(event1))))
+        Assert.assertEquals(
+            ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(event1))),
+            viewModel.eventsData.value
+        )
+    }
+
+    @Test
     fun requestCalendarResponseErrorTest() {
         val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
         val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
@@ -156,7 +186,31 @@ class ViewModelImplTest {
     }
 
     @Test
-    fun refreshingDataNotSuccessTest() {
+    fun requestSavedCalendarDataErrorTest(){
+        val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
+        val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
+
+        val publishSubject: PublishSubject<ResponseWrapper<CalendarData>> = PublishSubject.create()
+        given(modelMock.requestSavedData(secondCalendar)).willReturn(publishSubject)
+
+        val viewModel = ViewModelImpl(app)
+        viewModel.requestSavedCalendarData(secondCalendar)
+
+        Mockito.verify(modelMock).requestSavedData(argThat { equals(secondCalendar) })
+        Assert.assertEquals(
+            ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf())), viewModel.eventsData.value
+        )
+
+        publishSubject.onNext(ResponseWrapper.error(CalendarData(secondCalendar, mutableListOf()), "500"))
+        Assert.assertEquals(
+            ResponseWrapper.error(CalendarData(secondCalendar, mutableListOf()), "500"),
+            viewModel.eventsData.value
+        )
+    }
+
+    @Test
+    fun refreshingDataNoSuccessTest() {
         val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
         val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
         val event1 = CalendarEvent(
@@ -174,6 +228,38 @@ class ViewModelImplTest {
         viewModel.requestCalendarResponse(secondCalendar)
 
         Mockito.verify(modelMock).requestCalendarData(argThat { equals(secondCalendar) })
+        Assert.assertEquals(
+            ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf(event1))),
+            viewModel.eventsData.value
+        )
+
+        publishSubject.onNext(ResponseWrapper.error(CalendarData(secondCalendar, mutableListOf()), "500"))
+        //Should display old data with error status
+        Assert.assertEquals(
+            ResponseWrapper.error(CalendarData(secondCalendar, mutableListOf(event1)), "500"),
+            viewModel.eventsData.value
+        )
+    }
+
+    @Test
+    fun requestSavedCalendarDataNoSuccessTest(){
+        val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
+        val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        val event1 = CalendarEvent(
+            calendarId = secondCalendar.calendarId, title = "First title",
+            dateStart = Date(1328209200000L), dateEnd = Date(1328216400000), description = "Description",
+            location = "Location"
+        )
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
+
+        val publishSubject: PublishSubject<ResponseWrapper<CalendarData>> = PublishSubject.create()
+        given(modelMock.requestSavedData(secondCalendar)).willReturn(publishSubject)
+
+        val viewModel = ViewModelImpl(app)
+        viewModel.eventsData.value = ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(event1)))
+        viewModel.requestSavedCalendarData(secondCalendar)
+
+        Mockito.verify(modelMock).requestSavedData(argThat { equals(secondCalendar) })
         Assert.assertEquals(
             ResponseWrapper.loading(CalendarData(secondCalendar, mutableListOf(event1))),
             viewModel.eventsData.value
