@@ -129,7 +129,7 @@ class UITest {
         onView(withText("Calendar Two")).check(matches(isDisplayed()))
 
         onView(withText("Calendar Two")).perform(click())
-        Mockito.verify(viewModelInterfaceMock).requestCalendarResponse(argThat { equals(calendarTwo) })
+        Mockito.verify(viewModelInterfaceMock).requestSavedCalendarData(argThat { equals(calendarTwo) })
 
         onView(withId(R.id.drawerLayout)).check(matches(isClosed()))
     }

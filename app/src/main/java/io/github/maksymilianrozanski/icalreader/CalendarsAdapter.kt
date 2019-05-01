@@ -42,7 +42,7 @@ class CalendarsAdapter(
         fun bindViews(calendar: WebCalendar) {
             calendarNameTextView.text = calendar.calendarName
             calendarNameTextView.setOnClickListener {
-                viewModelInterface.requestCalendarResponse(calendar)
+                viewModelInterface.requestSavedCalendarData(calendar)
                 (itemView.parent.parent.parent as DrawerLayout).closeDrawers()
             }
         }
