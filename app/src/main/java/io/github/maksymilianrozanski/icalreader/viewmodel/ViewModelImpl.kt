@@ -8,6 +8,7 @@ import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.NetworkModule
+import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.subscribeBy
 import javax.inject.Inject
@@ -53,56 +54,37 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
         requestCalendarResponse(eventsData.value?.data?.webCalendar ?: calendars.value?.get(0) ?: return)
     }
 
-    //TODO: remove duplicate code
     override fun requestCalendarResponse(webCalendar: WebCalendar) {
-        subscription = model.requestCalendarData(webCalendar)
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .doOnSubscribe {
-                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
-                    eventsData.postValue(
-                        ResponseWrapper.loading(
-                            CalendarData(
-                                webCalendar,
-                                eventsData.value?.data?.events ?: mutableListOf()
-                            )
-                        )
-                    )
-                } else {
-                    eventsData.postValue(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf())))
-                }
-            }
-            .doOnError { println("Error") }
-            .subscribe {
-                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
-                    postNewEventsIfAvailable(it)
-                } else {//displaying other calendar
-                    eventsData.postValue(it)
-                }
-            }
+        subscription = subscribeToCalendarData(webCalendar, model.requestCalendarData(webCalendar))
     }
 
     override fun requestSavedCalendarData(webCalendar: WebCalendar) {
-        subscription = model.requestSavedData(webCalendar)
-            .subscribeOn(schedulerProvider.io())
+        subscription = subscribeToCalendarData(webCalendar, model.requestSavedData(webCalendar))
+    }
+
+    private fun subscribeToCalendarData(
+        requestedCalendar: WebCalendar,
+        observable: Observable<ResponseWrapper<CalendarData>>
+    ): Disposable {
+        return observable.subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
             .doOnSubscribe {
-                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
+                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == requestedCalendar.calendarId) {
                     eventsData.postValue(
                         ResponseWrapper.loading(
                             CalendarData(
-                                webCalendar,
+                                requestedCalendar,
                                 eventsData.value?.data?.events ?: mutableListOf()
                             )
                         )
                     )
                 } else {
-                    eventsData.postValue(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf())))
+                    eventsData.postValue(ResponseWrapper.loading(CalendarData(requestedCalendar, mutableListOf())))
                 }
             }
             .doOnError { println("Error") }
             .subscribe {
-                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == webCalendar.calendarId) {
+                if (eventsData.value?.data?.webCalendar?.calendarId ?: false == requestedCalendar.calendarId) {
                     postNewEventsIfAvailable(it)
                 } else {//displaying other calendar
                     eventsData.postValue(it)
