@@ -5,15 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
+import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelInterface
 
-class CalendarsAdapter(private val context: Context, var list: MutableList<WebCalendar>) :
+class CalendarsAdapter(
+    private val context: Context,
+    var list: MutableList<WebCalendar>,
+    private val viewModelInterface: ViewModelInterface
+) :
     RecyclerView.Adapter<CalendarsAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(context).inflate(R.layout.calendar_list_row, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(view, viewModelInterface)
     }
 
     override fun getItemCount(): Int {
@@ -29,11 +35,16 @@ class CalendarsAdapter(private val context: Context, var list: MutableList<WebCa
         notifyDataSetChanged()
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View, private val viewModelInterface: ViewModelInterface) :
+        RecyclerView.ViewHolder(itemView) {
         var calendarNameTextView = itemView.findViewById(R.id.calendarNameTextView) as TextView
 
         fun bindViews(calendar: WebCalendar) {
             calendarNameTextView.text = calendar.calendarName
+            calendarNameTextView.setOnClickListener {
+                viewModelInterface.requestCalendarResponse(calendar)
+                (itemView.parent.parent.parent as DrawerLayout).closeDrawers()
+            }
         }
     }
 }

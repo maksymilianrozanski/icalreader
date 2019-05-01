@@ -87,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initNavigationDrawer() {
         calendarsLayoutManager = LinearLayoutManager(this)
-        calendarsAdapter = CalendarsAdapter(this, viewModel.calendars.value ?: mutableListOf())
+        calendarsAdapter = CalendarsAdapter(this, viewModel.calendars.value ?: mutableListOf(), viewModel)
         navigationViewRecyclerView.layoutManager = calendarsLayoutManager
         navigationViewRecyclerView.adapter = calendarsAdapter
         val calendarsObserver = Observer<MutableList<WebCalendar>> {

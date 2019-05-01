@@ -5,8 +5,10 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.hasErrorText
-import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.espresso.contrib.DrawerActions
+import androidx.test.espresso.contrib.DrawerMatchers.isClosed
+import androidx.test.espresso.contrib.DrawerMatchers.isOpen
+import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockitokotlin2.any
@@ -108,5 +110,27 @@ class UITest {
         onView(withId(R.id.calendarUrlEditText)).check(matches(not(hasErrorText(containsString("")))))
 
         Mockito.verify(viewModelInterfaceMock, times(0)).saveNewCalendar(any())
+    }
+
+    @Test
+    fun requestingCalendarFromDrawerTest() {
+        val calendarOne = WebCalendar(calendarName = "Calendar One", calendarUrl = "http://example.com")
+        val calendarTwo = WebCalendar(calendarName = "Calendar Two", calendarUrl = "http://example.com")
+        val savedCalendars = mutableListOf(calendarOne, calendarTwo)
+        Mockito.`when`(calendarsMock.value).thenReturn(savedCalendars)
+
+        activityRule.launchActivity(null)
+
+        onView(withId(R.id.drawerLayout)).check(matches(isClosed()))
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawerLayout)).check(matches(isOpen()))
+
+        onView(withText("Calendar One")).check(matches(isDisplayed()))
+        onView(withText("Calendar Two")).check(matches(isDisplayed()))
+
+        onView(withText("Calendar Two")).perform(click())
+        Mockito.verify(viewModelInterfaceMock).requestCalendarResponse(argThat { equals(calendarTwo) })
+
+        onView(withId(R.id.drawerLayout)).check(matches(isClosed()))
     }
 }
