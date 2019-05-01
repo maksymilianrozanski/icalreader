@@ -50,19 +50,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
     }
 
     override fun requestCalendarResponse() {
-        val webCalendarZero = calendars.value!![0]
-        subscription = model.requestSavedCalendars().flatMap {
-            model.requestCalendarData(it[0])
-        }
-            .subscribeOn(schedulerProvider.io())
-            .observeOn(schedulerProvider.ui())
-            .doOnSubscribe {
-                eventsData.value = ResponseWrapper.loading(CalendarData(webCalendarZero, mutableListOf()))
-            }
-            .doOnError { println("Error") }
-            .subscribe {
-                eventsData.value = it
-            }
+        requestCalendarResponse(eventsData.value?.data?.webCalendar ?: calendars.value?.get(0) ?: return)
     }
 
     override fun requestCalendarResponse(webCalendar: WebCalendar) {
@@ -102,7 +90,8 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
                     "Error" -> eventsData.postValue(
                         ResponseWrapper.error(
                             CalendarData(
-                                response.data.webCalendar, eventsData.value?.data?.events ?: mutableListOf()),
+                                response.data.webCalendar, eventsData.value?.data?.events ?: mutableListOf()
+                            ),
                             response.message
                         )
                     )
