@@ -41,13 +41,16 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
     }
 
     private fun requestSavedCalendars() {
-        calendarsSubscription =
-            model.requestSavedCalendars()
-                .subscribeOn(schedulerProvider.io())
-                .observeOn(schedulerProvider.ui())
-                .subscribe {
-                    calendars.postValue(it as MutableList<WebCalendar>)
-                }
+        calendarsSubscription = savedCalendarsDisposable(model.requestSavedCalendars())
+    }
+
+    private fun savedCalendarsDisposable(observable: Observable<List<WebCalendar>>): Disposable {
+        return observable
+            .subscribeOn(schedulerProvider.io())
+            .observeOn(schedulerProvider.ui())
+            .subscribe {
+                calendars.postValue(it as MutableList<WebCalendar>)
+            }
     }
 
     override fun requestCalendarResponse() {
@@ -120,14 +123,21 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
     }
 
     override fun saveNewCalendar(formToSave: CalendarForm) {
-        calendarsSubscription = model.saveNewCalendar(formToSave)
-            .subscribeOn(schedulerProvider.io())
+        var createdCalendar: WebCalendar? = null
+        calendarsSubscription = model.saveNewCalendar(formToSave).flatMap { form: ResponseWrapper<CalendarForm> ->
+            calendarForm.postValue(form.data)
+            model.requestSavedCalendars().flatMap { list ->
+                list.forEach { calendar ->
+                    if (calendar.calendarName == formToSave.calendarName) {
+                        createdCalendar = calendar
+                        return@forEach
+                    }
+                }
+                model.requestCalendarData(createdCalendar ?: list[0])
+            }
+        }.subscribeOn(schedulerProvider.io())
             .observeOn(schedulerProvider.ui())
-            .subscribeBy(
-                onNext = {
-                    calendarForm.postValue(it.data)
-                    requestSavedCalendars()
-                },
+            .subscribeBy(onNext = { eventsData.postValue(it) },
                 onError = {
                     formToSave.nameError = CalendarForm.unknownError
                     calendarForm.postValue(formToSave)

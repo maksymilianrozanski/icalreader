@@ -64,11 +64,14 @@ class ModelImpl @Inject constructor(
         dataSource.insertEventsList(eventsCorrectIds)
     }
 
+
     override fun requestSavedData(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
-        val events = dataSource.getEventsOfCalendar(webCalendar.calendarId)
-        val calendarData = CalendarData(webCalendar, events as MutableList<CalendarEvent>)
-        val response = ResponseWrapper.success(calendarData)
-        return Observable.just(response)
+        return dataSource.getEventsOfCalendarSingle(webCalendar.calendarId)
+            .map {
+                val calendarData = CalendarData(webCalendar, it.toMutableList())
+                val response = ResponseWrapper.success(calendarData)
+                response
+            }.toObservable()
     }
 
     fun requestCalendarResponseFromApi(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {

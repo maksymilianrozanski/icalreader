@@ -12,6 +12,7 @@ import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
 import io.github.maksymilianrozanski.icalreader.module.NetworkTestModule
 import io.reactivex.Completable
+import io.reactivex.subjects.SingleSubject
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert
@@ -318,13 +319,13 @@ class ModelImplTest {
     }
 
     @Test
-    fun savingNewCalendarFormInvalidUrlTest(){
+    fun savingNewCalendarFormInvalidUrlTest() {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
         val model = ModelImpl(apiService, iCalReader, dataSource)
 
-        val calendarForm = CalendarForm("","")
+        val calendarForm = CalendarForm("", "")
         calendarForm.calendarName = "name"
         calendarForm.calendarUrl = "http://invalid url."
 
@@ -332,6 +333,50 @@ class ModelImplTest {
             it.status == "Error" && it.data.calendarName == "name" && it.data.calendarUrl == "http://invalid url."
                     && it.data.nameError == null && it.data.urlError == CalendarForm.cannotContainSpaces
                     && it.message == "Invalid input"
+        }
+    }
+
+    @Test
+    fun requestSavedDataOfWebCalendarSuccessTest() {
+        val apiService = Mockito.mock(APIService::class.java)
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
+
+        val webCalendar = WebCalendar(calendarName = "Example name", calendarUrl = "http://example.com")
+        val event = CalendarEvent(
+            calendarId = webCalendar.calendarId,
+            title = "Some title",
+            dateStart = Date(1544605810000L),
+            dateEnd = Date(1544692210000L),
+            description = "description",
+            location = "location"
+        )
+        val subject = SingleSubject.create<List<CalendarEvent>>()
+        Mockito.`when`(dataSource.getEventsOfCalendarSingle(webCalendar.calendarId)).thenReturn(subject)
+        subject.onSuccess(listOf(event))
+
+        model.requestSavedData(webCalendar).test().assertNoErrors().await().assertValue {
+            it.status == "Success" && it.data.webCalendar == webCalendar && it.data.events == listOf(event)
+        }
+    }
+
+    @Test
+    fun requestSavedDataOfWebCalendarEmptyEventsTest() {
+        val apiService = Mockito.mock(APIService::class.java)
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
+
+        val webCalendar = WebCalendar(calendarName = "Example name", calendarUrl = "http://example.com")
+
+        val subject = SingleSubject.create<List<CalendarEvent>>()
+        Mockito.`when`(dataSource.getEventsOfCalendarSingle(webCalendar.calendarId)).thenReturn(subject)
+        subject.onSuccess(listOf())
+
+        model.requestSavedData(webCalendar).test().assertNoErrors().await().assertValue {
+            it.status == "Success" && it.data.webCalendar == webCalendar
+                    && it.data.events == listOf<CalendarEvent>()
         }
     }
 }
