@@ -210,11 +210,11 @@ class EventDaoTest {
         database.eventDao().insertEvent(eventTwo)
         database.eventDao().insertEvent(eventThree)
 
-        database.eventDao().getEventsOfCalendarSingle(calendarOne.calendarId).test().await().assertNoErrors()
+        database.eventDao().getEventsOfCalendar(calendarOne.calendarId).test().await().assertNoErrors()
             .assertValue {
                 listOf(eventOne, eventTwo) == it
             }
-        database.eventDao().getEventsOfCalendarSingle(calendarTwo.calendarId).test().await().assertNoErrors()
+        database.eventDao().getEventsOfCalendar(calendarTwo.calendarId).test().await().assertNoErrors()
             .assertValue {
                 listOf(eventThree) == it
             }
@@ -225,7 +225,7 @@ class EventDaoTest {
         val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
         database.eventDao().insertCalendar(calendarOne)
 
-        database.eventDao().getEventsOfCalendarSingle(calendarOne.calendarId).test().await().assertNoErrors()
+        database.eventDao().getEventsOfCalendar(calendarOne.calendarId).test().await().assertNoErrors()
             .assertValue { listOf<CalendarEvent>() == it }
     }
 }

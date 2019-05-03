@@ -66,7 +66,7 @@ class ModelImpl @Inject constructor(
 
 
     override fun requestSavedData(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
-        return dataSource.getEventsOfCalendarSingle(webCalendar.calendarId)
+        return dataSource.getEventsOfCalendar(webCalendar.calendarId)
             .map {
                 val calendarData = CalendarData(webCalendar, it.toMutableList())
                 val response = ResponseWrapper.success(calendarData)

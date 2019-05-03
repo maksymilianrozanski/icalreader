@@ -22,7 +22,7 @@ interface EventDao {
     fun getAllCalendarsSingle(): Single<List<WebCalendar>>
 
     @Query("SELECT * FROM events WHERE calendarid = :webCalendarId ORDER BY datestart")
-    fun getEventsOfCalendarSingle(webCalendarId: String): Single<List<CalendarEvent>>
+    fun getEventsOfCalendar(webCalendarId: String): Single<List<CalendarEvent>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertCalendar(calendar: WebCalendar)

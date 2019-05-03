@@ -353,7 +353,7 @@ class ModelImplTest {
             location = "location"
         )
         val subject = SingleSubject.create<List<CalendarEvent>>()
-        Mockito.`when`(dataSource.getEventsOfCalendarSingle(webCalendar.calendarId)).thenReturn(subject)
+        Mockito.`when`(dataSource.getEventsOfCalendar(webCalendar.calendarId)).thenReturn(subject)
         subject.onSuccess(listOf(event))
 
         model.requestSavedData(webCalendar).test().assertNoErrors().await().assertValue {
@@ -371,7 +371,7 @@ class ModelImplTest {
         val webCalendar = WebCalendar(calendarName = "Example name", calendarUrl = "http://example.com")
 
         val subject = SingleSubject.create<List<CalendarEvent>>()
-        Mockito.`when`(dataSource.getEventsOfCalendarSingle(webCalendar.calendarId)).thenReturn(subject)
+        Mockito.`when`(dataSource.getEventsOfCalendar(webCalendar.calendarId)).thenReturn(subject)
         subject.onSuccess(listOf())
 
         model.requestSavedData(webCalendar).test().assertNoErrors().await().assertValue {
