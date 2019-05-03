@@ -16,7 +16,7 @@ class ModelImpl @Inject constructor(
             Observable.just(ResponseWrapper.loading(CalendarData(webCalendar, mutableListOf()))),
             requestCalendarResponseFromApi(webCalendar).doOnNext {
                 if (it.status == "Success") {
-//Saving disabled//                    replaceSavedEvents(hardcodedCalendarToSave, it.data.events)
+                    replaceSavedEvents(webCalendar, it.data.events)
                 }
             }).doOnError { println(it) }
             .onErrorReturnItem(ResponseWrapper.error(CalendarData(webCalendar, mutableListOf()), "Other exception"))
