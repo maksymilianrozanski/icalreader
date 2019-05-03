@@ -22,9 +22,6 @@ interface EventDao {
     fun getAllCalendarsSingle(): Single<List<WebCalendar>>
 
     @Query("SELECT * FROM events WHERE calendarid = :webCalendarId ORDER BY datestart")
-    fun getEventsOfCalendar(webCalendarId: String): List<CalendarEvent>
-
-    @Query("SELECT * FROM events WHERE calendarid = :webCalendarId ORDER BY datestart")
     fun getEventsOfCalendarSingle(webCalendarId: String): Single<List<CalendarEvent>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
