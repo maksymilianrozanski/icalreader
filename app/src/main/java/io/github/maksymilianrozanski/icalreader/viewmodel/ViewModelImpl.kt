@@ -127,6 +127,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
         calendarsSubscription = model.saveNewCalendar(formToSave).flatMap { form: ResponseWrapper<CalendarForm> ->
             calendarForm.postValue(form.data)
             model.requestSavedCalendars().flatMap { list ->
+                calendars.postValue(list.toMutableList())
                 list.forEach { calendar ->
                     if (calendar.calendarName == formToSave.calendarName) {
                         createdCalendar = calendar

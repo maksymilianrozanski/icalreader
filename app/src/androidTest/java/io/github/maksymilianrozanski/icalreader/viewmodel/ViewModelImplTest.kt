@@ -78,6 +78,8 @@ class ViewModelImplTest {
         )
 
         val viewModel = ViewModelImpl(app)
+        Assert.assertEquals(listOf(savedCalendar), viewModel.calendars.value!!)
+
         given(modelMock.requestSavedCalendars()).willReturn(
             Observable.just(listOf(savedCalendar, calendarToSave))
         )
@@ -117,6 +119,7 @@ class ViewModelImplTest {
                     && calendarReturnedFromModel.nameError == viewModel.calendarForm.value!!.nameError
                     && calendarReturnedFromModel.urlError == viewModel.calendarForm.value!!.urlError
         )
+        Assert.assertEquals(listOf(savedCalendar, calendarToSave), viewModel.calendars.value!!)
     }
 
     @Test
