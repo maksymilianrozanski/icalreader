@@ -15,9 +15,6 @@ interface APIService {
     @GET("/")
     fun getHome(): Observable<Response<ResponseBody>>
 
-    @GET("/api/test.ical")
-    fun getResponse(): Observable<Response<ResponseBody>>
-
     @GET
     fun getResponse(@Url url: String): Observable<Response<ResponseBody>>
 }

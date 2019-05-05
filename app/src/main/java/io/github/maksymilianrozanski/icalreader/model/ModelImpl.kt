@@ -74,20 +74,6 @@ class ModelImpl @Inject constructor(
             }.toObservable()
     }
 
-    fun requestCalendarResponseFromApi(): Observable<ResponseWrapper<MutableList<CalendarEvent>>> {
-        return apiService.getResponse().map {
-            if (it.code() == 200 && it.body() != null) {
-                val iCalString = it.body()!!.string()
-                val events = iCalReader.getCalendarEvents(iCalString).toMutableList()
-                events.sortBy(CalendarEvent::dateStart)
-                val successResponse = ResponseWrapper.success(events)
-                successResponse
-            } else {
-                ResponseWrapper.error(mutableListOf(), it.code().toString())
-            }
-        }
-    }
-
     fun requestCalendarResponseFromApi(webCalendar: WebCalendar): Observable<ResponseWrapper<CalendarData>> {
         return apiService.getResponse(webCalendar.calendarUrl).map {
             if (it.code() == 200 && it.body() != null) {
