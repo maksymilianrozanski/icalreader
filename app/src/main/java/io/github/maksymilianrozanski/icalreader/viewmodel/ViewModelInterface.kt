@@ -15,4 +15,5 @@ interface ViewModelInterface {
     fun requestCalendarResponse(webCalendar: WebCalendar)
     fun requestSavedCalendarData(webCalendar: WebCalendar)
     fun saveNewCalendar(formToSave: CalendarForm)
+    fun deleteCalendar(webCalendar: WebCalendar)
 }

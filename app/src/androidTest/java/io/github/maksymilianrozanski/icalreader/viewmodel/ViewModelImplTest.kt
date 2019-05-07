@@ -5,6 +5,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
+import com.nhaarman.mockitokotlin2.times
 import dagger.Component
 import io.github.maksymilianrozanski.icalreader.MainActivity
 import io.github.maksymilianrozanski.icalreader.MyApp
@@ -12,6 +13,7 @@ import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.*
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.*
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Assert
@@ -486,5 +488,23 @@ class ViewModelImplTest {
             ResponseWrapper.error(CalendarData(secondCalendar, mutableListOf(event2)), "500"),
             viewModel.eventsData.value
         )
+    }
+
+    @Test
+    fun deleteCalendarTest(){
+        val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
+        val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
+
+        val viewModel = ViewModelImpl(app)
+
+        given(modelMock.deleteCalendar(firstCalendar)).willReturn(Completable.complete())
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(secondCalendar)))
+        viewModel.deleteCalendar(firstCalendar)
+
+        Mockito.verify(modelMock).deleteCalendar(argThat { equals(firstCalendar) })
+        Mockito.verify(modelMock, times(2)).requestSavedCalendars()
+
+        Assert.assertEquals(listOf(secondCalendar), viewModel.calendars.value)
     }
 }

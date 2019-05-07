@@ -62,4 +62,8 @@ class ViewModelInterfaceWrapper(val viewModelInterface: ViewModelInterface) : Vi
     override fun saveNewCalendar(formToSave: CalendarForm) {
         viewModelInterface.saveNewCalendar(formToSave)
     }
+
+    override fun deleteCalendar(webCalendar: WebCalendar) {
+        viewModelInterface.deleteCalendar(webCalendar)
+    }
 }

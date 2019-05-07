@@ -146,6 +146,13 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             )
     }
 
+    override fun deleteCalendar(webCalendar: WebCalendar) {
+        calendarsSubscription =
+            Observable.concatArray(model.deleteCalendar(webCalendar).toObservable(), model.requestSavedCalendars())
+                .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
+                .subscribe { calendars.postValue(it.toMutableList()) }
+    }
+
     override fun onCleared() {
         super.onCleared()
         subscription.dispose()
