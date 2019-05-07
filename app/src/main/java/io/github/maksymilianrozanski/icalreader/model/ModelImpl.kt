@@ -2,6 +2,7 @@ package io.github.maksymilianrozanski.icalreader.model
 
 import io.github.maksymilianrozanski.icalreader.data.*
 import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
+import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
 
@@ -114,7 +115,7 @@ class ModelImpl @Inject constructor(
         return dataSource.getAllCalendarsSingle().toObservable()
     }
 
-    override fun deleteCalendar(calendar: WebCalendar) {
-        dataSource.deleteCalendar(calendar)
+    override fun deleteCalendar(calendar: WebCalendar):Completable {
+        return dataSource.deleteCalendarCompletable(calendar)
     }
 }

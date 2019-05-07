@@ -4,6 +4,7 @@ import io.github.maksymilianrozanski.icalreader.data.CalendarData
 import io.github.maksymilianrozanski.icalreader.data.CalendarForm
 import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
+import io.reactivex.Completable
 import io.reactivex.Observable
 
 interface Model {
@@ -16,5 +17,5 @@ interface Model {
 
     fun saveNewCalendar(calendarForm: CalendarForm): Observable<ResponseWrapper<CalendarForm>>
 
-    fun deleteCalendar(calendar: WebCalendar)
+    fun deleteCalendar(calendar: WebCalendar): Completable
 }

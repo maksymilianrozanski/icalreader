@@ -283,4 +283,17 @@ class ModelImplTest {
                     && it.data.events == listOf<CalendarEvent>()
         }
     }
+
+    @Test
+    fun deleteCalendarTest() {
+        val apiService = Mockito.mock(APIService::class.java)
+        val iCalReader = Mockito.mock(ICalReader::class.java)
+        val dataSource = Mockito.mock(EventDao::class.java)
+        val model = ModelImpl(apiService, iCalReader, dataSource)
+
+        val webCalendar = WebCalendar(calendarName = "Example calendar", calendarUrl = "https://example.com")
+        Mockito.`when`(dataSource.deleteCalendarCompletable(webCalendar)).thenReturn(Completable.complete())
+        model.deleteCalendar(webCalendar).test().await().assertNoErrors().assertComplete()
+        Mockito.verify(dataSource).deleteCalendarCompletable(webCalendar)
+    }
 }
