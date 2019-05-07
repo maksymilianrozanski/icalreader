@@ -176,6 +176,66 @@ class EventDaoTest {
     }
 
     @Test
+    fun deleteSingleCalendarCompletableTest() {
+        val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
+        val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")
+
+        database.eventDao().insertCalendar(calendarOne)
+        database.eventDao().insertCalendar(calendarTwo)
+
+        Assert.assertEquals(2, database.eventDao().getAllCalendars().size)
+
+        database.eventDao().deleteCalendarCompletable(calendarOne).test().await().assertNoErrors().assertComplete()
+
+        val fetchedCalendars = database.eventDao().getAllCalendars()
+        val fetchedCalendar = fetchedCalendars[0]
+        Assert.assertEquals(calendarTwo.calendarId, fetchedCalendar.calendarId)
+        Assert.assertEquals(calendarTwo.calendarName, fetchedCalendar.calendarName)
+        Assert.assertEquals(calendarTwo.calendarUrl, fetchedCalendar.calendarUrl)
+        Assert.assertEquals(1, fetchedCalendars.size)
+    }
+
+    @Test
+    fun deleteSingleCalendarCascadeDeletionTest() {
+        val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
+        val eventOne = CalendarEvent(
+            calendarId = calendarOne.calendarId,
+            title = "First title",
+            location = "location",
+            dateStart = Date(1544613132000L),
+            dateEnd = Date(1544613192000L),
+            description = "description"
+        )
+        val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")
+        val eventTwo = CalendarEvent(
+            calendarId = calendarTwo.calendarId,
+            title = "Second title",
+            location = "Location",
+            dateStart = Date(1542017592000L),
+            dateEnd = Date(1542017652000L),
+            description = "description"
+        )
+
+        database.eventDao().insertCalendar(calendarOne)
+        database.eventDao().insertEvent(eventOne)
+        database.eventDao().insertCalendar(calendarTwo)
+        database.eventDao().insertEvent(eventTwo)
+
+        Assert.assertEquals(2, database.eventDao().getAllCalendars().size)
+        database.eventDao().deleteCalendarCompletable(calendarOne).test().await().assertNoErrors().assertComplete()
+
+        val fetchedCalendars = database.eventDao().getAllCalendars()
+        val fetchedCalendar = fetchedCalendars[0]
+        Assert.assertEquals(calendarTwo.calendarId, fetchedCalendar.calendarId)
+        Assert.assertEquals(calendarTwo.calendarName, fetchedCalendar.calendarName)
+        Assert.assertEquals(calendarTwo.calendarUrl, fetchedCalendar.calendarUrl)
+        Assert.assertEquals(1, fetchedCalendars.size)
+
+        database.eventDao().getAllEventsSingle().test().await().assertNoErrors()
+            .assertValue { it.size == 1 && it[0].title == "Second title" }
+    }
+
+    @Test
     fun getEventsOfSpecificCalendarSingleTest() {
         val calendarOne = WebCalendar(calendarName = "first example calendar", calendarUrl = "http://example1.com")
         val calendarTwo = WebCalendar(calendarName = "second example calendar", calendarUrl = "http://example2.com")

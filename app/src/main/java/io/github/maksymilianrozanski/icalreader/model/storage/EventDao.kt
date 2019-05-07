@@ -28,7 +28,7 @@ interface EventDao {
     fun insertCalendar(calendar: WebCalendar)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertCalendarSingle(calendar: WebCalendar):Completable
+    fun insertCalendarSingle(calendar: WebCalendar): Completable
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertEvent(event: CalendarEvent)
@@ -44,6 +44,9 @@ interface EventDao {
 
     @Delete
     fun deleteCalendar(calendar: WebCalendar)
+
+    @Delete
+    fun deleteCalendarCompletable(calendar: WebCalendar): Completable
 
     @Query("DELETE FROM events WHERE events.calendarid = :webCalendarId")
     fun deleteAllEventsOfCalendar(webCalendarId: String)
