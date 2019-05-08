@@ -1,5 +1,6 @@
 package io.github.maksymilianrozanski.icalreader
 
+import android.widget.Button
 import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
@@ -10,6 +11,7 @@ import androidx.test.espresso.contrib.DrawerMatchers.isClosed
 import androidx.test.espresso.contrib.DrawerMatchers.isOpen
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import androidx.test.rule.ActivityTestRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
@@ -22,8 +24,7 @@ import io.github.maksymilianrozanski.icalreader.data.WebCalendar
 import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.*
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelInterface
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.CoreMatchers.not
+import org.hamcrest.CoreMatchers.*
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -131,6 +132,36 @@ class UITest {
         onView(withText("Calendar Two")).perform(click())
         Mockito.verify(viewModelInterfaceMock).requestSavedCalendarData(argThat { equals(calendarTwo) })
 
+        onView(withId(R.id.drawerLayout)).check(matches(isClosed()))
+    }
+
+    @Test
+    fun deleteDialogTest() {
+        val calendarOne = WebCalendar(calendarName = "Calendar One", calendarUrl = "http://example.com")
+        val savedCalendars = mutableListOf(calendarOne)
+        Mockito.`when`(calendarsMock.value).thenReturn(savedCalendars)
+
+        activityRule.launchActivity(null)
+        val delete = getInstrumentation().targetContext.getString(R.string.delete)
+        val cancel = getInstrumentation().targetContext.getString(R.string.cancel)
+        val areYouSure = getInstrumentation().targetContext.getString(R.string.are_you_sure_you_want_to_delete)
+
+        onView(withId(R.id.drawerLayout)).check(matches(isClosed()))
+        onView(withId(R.id.drawerLayout)).perform(DrawerActions.open())
+        onView(withId(R.id.drawerLayout)).check(matches(isOpen()))
+        onView(withText("Calendar One")).check(matches(isDisplayed()))
+        onView(withId(R.id.deleteCalendarButton)).check(matches(isDisplayed()))
+        onView(withId(R.id.deleteCalendarButton)).perform(click())
+        onView(withText("$areYouSure Calendar One?")).check(matches(isDisplayed()))
+        onView(allOf(instanceOf(Button::class.java), withText(delete))).check(matches(isDisplayed()))
+        onView(withText(cancel)).check(matches(isDisplayed()))
+
+        onView(withText(cancel)).perform(click())
+        Mockito.verify(viewModelInterfaceMock, times(0)).deleteCalendar(any())
+
+        onView(withId(R.id.deleteCalendarButton)).perform(click())
+        onView(allOf(instanceOf(Button::class.java), withText(delete))).perform(click())
+        Mockito.verify(viewModelInterfaceMock).deleteCalendar(calendarOne)
         onView(withId(R.id.drawerLayout)).check(matches(isClosed()))
     }
 }

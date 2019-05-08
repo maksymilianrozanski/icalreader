@@ -1,9 +1,11 @@
 package io.github.maksymilianrozanski.icalreader
 
+import android.app.AlertDialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -38,6 +40,7 @@ class CalendarsAdapter(
     inner class ViewHolder(itemView: View, private val viewModelInterface: ViewModelInterface) :
         RecyclerView.ViewHolder(itemView) {
         var calendarNameTextView = itemView.findViewById(R.id.calendarNameTextView) as TextView
+        var deleteButton = itemView.findViewById(R.id.deleteCalendarButton) as Button
 
         fun bindViews(calendar: WebCalendar) {
             calendarNameTextView.text = calendar.calendarName
@@ -45,6 +48,21 @@ class CalendarsAdapter(
                 viewModelInterface.requestSavedCalendarData(calendar)
                 (itemView.parent.parent.parent as DrawerLayout).closeDrawers()
             }
+            deleteButton.setOnClickListener {
+                deletionConfirmDialog(context, calendar).show()
+            }
+        }
+
+        private fun deletionConfirmDialog(context: Context, calendar: WebCalendar): AlertDialog {
+            return AlertDialog.Builder(context)
+                .setTitle(context.getString(R.string.delete))
+                .setMessage(context.getString(R.string.are_you_sure_you_want_to_delete) + " ${calendar.calendarName}?")
+                .setPositiveButton(context.getString(R.string.delete)) { _, _ ->
+                    run {
+                        viewModelInterface.deleteCalendar(calendar)
+                        (itemView.parent.parent.parent as DrawerLayout).closeDrawers()
+                    }
+                }.setNegativeButton(context.getString(R.string.cancel)) { dialog, _ -> dialog.dismiss() }.create()
         }
     }
 }

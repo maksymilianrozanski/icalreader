@@ -2,6 +2,8 @@
     <string name="app_name">ICalReader</string>
     <string name="calendar_name">Calendar name</string>
     <string name="calendar_url">Calendar URL</string>
-    <string name="cancel">Cancel</string>
     <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="are_you_sure_you_want_to_delete">Are you sure you want to delete</string>
 </resources>
