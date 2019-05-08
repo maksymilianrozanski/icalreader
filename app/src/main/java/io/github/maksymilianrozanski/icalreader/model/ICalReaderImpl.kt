@@ -7,6 +7,7 @@ import net.fortuna.ical4j.model.Calendar
 import net.fortuna.ical4j.model.Property
 import net.fortuna.ical4j.validate.ValidationException
 import java.io.StringReader
+import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Objects.isNull
@@ -30,8 +31,8 @@ class ICalReaderImpl : ICalReader {
             val start: Date
             val end: Date
             if (it.getProperty<Property>(Property.DTSTART) != null && it.getProperty<Property>(Property.DTEND) != null) {
-                start = toWarsawTimeZone(it.getProperty<Property>(Property.DTSTART).value)
-                end = toWarsawTimeZone(it.getProperty<Property>(Property.DTEND).value)
+                start = stringToDate(it.getProperty<Property>(Property.DTSTART).value)
+                end = stringToDate(it.getProperty<Property>(Property.DTEND).value)
             } else {
                 throw ValidationException(
                     "DTSTART or DTEND property not available. isNull: DTSTART:${
@@ -66,8 +67,14 @@ class ICalReaderImpl : ICalReader {
     }
 }
 
-fun toWarsawTimeZone(input: String): Date {
-    val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
-    dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-    return dateFormat.parse(input)
+fun stringToDate(input: String): Date {
+    try {
+        val dateFormat = SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'")
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        return dateFormat.parse(input)
+    } catch (e: ParseException) {
+        val dateFormat = SimpleDateFormat("yyyyMMdd")
+        dateFormat.timeZone = TimeZone.getTimeZone("UTC")
+        return dateFormat.parse(input)
+    }
 }

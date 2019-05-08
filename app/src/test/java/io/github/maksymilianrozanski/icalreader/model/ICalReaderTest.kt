@@ -126,8 +126,8 @@ class ICalReaderTest {
     @Test
     fun convertDate() {
         val input = "20180302T173000Z"
-        println(toWarsawTimeZone(input))
-        val output = toWarsawTimeZone(input)
+        println(stringToDate(input))
+        val output = stringToDate(input)
         val outputString: String = output.toString()
         Assert.assertEquals("Fri Mar 02 18:30:00 CET 2018", outputString)
     }

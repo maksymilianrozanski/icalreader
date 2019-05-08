@@ -36,6 +36,7 @@ class AddCalendarDialogFragment : DialogFragment() {
             (activity as MainActivity).viewModel.calendarForm.value = calendarForm
             if (calendarForm.nameError == null && calendarForm.urlError == null) {
                 (activity as MainActivity).viewModel.saveNewCalendar(calendarForm)
+                //TODO: close dialog fragment after successful saving; do not display previously saved calendar in EditTexts
             }
         }
 
