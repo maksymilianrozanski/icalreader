@@ -148,9 +148,28 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
 
     override fun deleteCalendar(webCalendar: WebCalendar) {
         calendarsSubscription =
-            Observable.concatArray(model.deleteCalendar(webCalendar).toObservable(), model.requestSavedCalendars())
-                .subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
-                .subscribe { calendars.postValue(it.toMutableList()) }
+            model.deleteCalendar(webCalendar).andThen(
+                Observable.defer {
+                    model.requestSavedCalendars().flatMap {
+                        calendars.postValue(it.toMutableList())
+                        if (it.isNotEmpty()) {
+                            model.requestSavedData(it[0])
+                        } else {
+                            Observable.just(
+                                ResponseWrapper.success(
+                                    CalendarData(
+                                        WebCalendar(calendarName = "", calendarUrl = ""),
+                                        mutableListOf()
+                                    )
+                                )
+                            )
+                        }
+                    }
+                }
+            ).subscribeOn(schedulerProvider.io()).observeOn(schedulerProvider.ui())
+                .subscribeBy {
+                    eventsData.postValue(it)
+                }
     }
 
     override fun onCleared() {

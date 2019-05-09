@@ -491,20 +491,76 @@ class ViewModelImplTest {
     }
 
     @Test
-    fun deleteCalendarTest(){
+    fun deleteCalendarTest() {
         val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
         val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        val secondCalEvent = CalendarEvent(
+            calendarId = secondCalendar.calendarId, title = "First title",
+            dateStart = Date(1328209200000L), dateEnd = Date(1328216400000), description = "Description",
+            location = "Location"
+        )
+        val savedEventsResponse = ResponseWrapper.success(
+            CalendarData(secondCalendar, mutableListOf(secondCalEvent))
+        )
         given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
 
         val viewModel = ViewModelImpl(app)
 
         given(modelMock.deleteCalendar(firstCalendar)).willReturn(Completable.complete())
         given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(secondCalendar)))
+        given(modelMock.requestSavedData(secondCalendar)).willReturn(
+            Observable.just(
+                savedEventsResponse
+            )
+        )
         viewModel.deleteCalendar(firstCalendar)
 
         Mockito.verify(modelMock).deleteCalendar(argThat { equals(firstCalendar) })
         Mockito.verify(modelMock, times(2)).requestSavedCalendars()
-
         Assert.assertEquals(listOf(secondCalendar), viewModel.calendars.value)
+        Assert.assertEquals(
+            viewModel.eventsData.value, savedEventsResponse
+        )
+    }
+
+    @Test
+    fun deletingAllCalendarsTest() {
+        val firstCalendar = WebCalendar(calendarName = "First calendar", calendarUrl = "http://example1.com")
+        val secondCalendar = WebCalendar(calendarName = "Second calendar", calendarUrl = "http://example2.com")
+        val secondCalEvent = CalendarEvent(
+            calendarId = secondCalendar.calendarId, title = "Second event title",
+            dateStart = Date(1328209200000L), dateEnd = Date(1328216400000), description = "Description",
+            location = "Location"
+        )
+        val secondCalendarResponse =
+            ResponseWrapper.success(CalendarData(secondCalendar, mutableListOf(secondCalEvent)))
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(firstCalendar, secondCalendar)))
+
+        val viewModel = ViewModelImpl(app)
+
+        given(modelMock.deleteCalendar(firstCalendar)).willReturn(Completable.complete())
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf(secondCalendar)))
+        given(modelMock.requestSavedData(secondCalendar)).willReturn(
+            Observable.just(
+                secondCalendarResponse
+            )
+        )
+        viewModel.deleteCalendar(firstCalendar)
+
+        Mockito.verify(modelMock).deleteCalendar(argThat { equals(firstCalendar) })
+        Mockito.verify(modelMock, times(2)).requestSavedCalendars()
+        Assert.assertEquals(listOf(secondCalendar), viewModel.calendars.value)
+        Assert.assertEquals(secondCalendarResponse, viewModel.eventsData.value)
+        given(modelMock.deleteCalendar(secondCalendar)).willReturn(Completable.complete())
+        given(modelMock.requestSavedCalendars()).willReturn(Observable.just(listOf()))
+        viewModel.deleteCalendar(secondCalendar)
+
+        Mockito.verify(modelMock).deleteCalendar(argThat { equals(secondCalendar) })
+        Assert.assertEquals(listOf<WebCalendar>(), viewModel.calendars.value)
+        Assert.assertTrue(
+            viewModel.eventsData.value!!.data.events.size == 0
+                    && viewModel.eventsData.value!!.data.webCalendar.calendarName == ""
+                    && viewModel.eventsData.value!!.data.webCalendar.calendarUrl == ""
+        )
     }
 }
