@@ -22,11 +22,14 @@ class AddCalendarDialogFragment : DialogFragment() {
         )
 
         val formObserver = Observer<CalendarForm> {
+            if (it.nameStatus == CalendarForm.success && it.urlStatus == CalendarForm.success) {
+                println("Should close dialog fragment")
+                dismiss()
+            }
             calendarNameEditText.setText(it.calendarName)
-            calendarNameEditText.error = errorMessage(it.nameError)
+            calendarNameEditText.error = errorMessage(it.nameStatus)
             calendarUrlEditText.setText(it.calendarUrl)
-            calendarUrlEditText.error = errorMessage(it.urlError)
-            println("inside observer of AddCalendarDialogFragment")
+            calendarUrlEditText.error = errorMessage(it.urlStatus)
         }
         (activity as MainActivity).viewModel.calendarForm.observe(this, formObserver)
 
@@ -34,9 +37,9 @@ class AddCalendarDialogFragment : DialogFragment() {
             calendarForm.calendarName = calendarNameEditText.text.toString()
             calendarForm.calendarUrl = calendarUrlEditText.text.toString()
             (activity as MainActivity).viewModel.calendarForm.value = calendarForm
-            if (calendarForm.nameError == null && calendarForm.urlError == null) {
+            if (calendarForm.nameStatus == null && calendarForm.urlStatus == null) {
                 (activity as MainActivity).viewModel.saveNewCalendar(calendarForm)
-                //TODO: close dialog fragment after successful saving; do not display previously saved calendar in EditTexts
+                //TODO: do not display previously saved calendar in EditTexts; add changing status to success to ViewModel
             }
         }
 

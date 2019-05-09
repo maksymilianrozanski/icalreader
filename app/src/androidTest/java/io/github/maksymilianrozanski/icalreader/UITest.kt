@@ -1,10 +1,12 @@
 package io.github.maksymilianrozanski.icalreader
 
 import android.widget.Button
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.typeText
+import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.DrawerActions
 import androidx.test.espresso.contrib.DrawerMatchers.isClosed
@@ -25,6 +27,7 @@ import io.github.maksymilianrozanski.icalreader.model.Model
 import io.github.maksymilianrozanski.icalreader.module.*
 import io.github.maksymilianrozanski.icalreader.viewmodel.ViewModelInterface
 import org.hamcrest.CoreMatchers.*
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,6 +41,9 @@ class UITest {
     @Rule
     @JvmField
     val activityRule = ActivityTestRule(MainActivity::class.java, false, false)
+
+    @get:Rule
+    val executor = InstantTaskExecutorRule()
 
     lateinit var app: MyApp
     lateinit var viewModelInterfaceWrapper: ViewModelInterfaceWrapper
@@ -92,6 +98,34 @@ class UITest {
         Mockito.verify(viewModelInterfaceMock).saveNewCalendar(argThat<CalendarForm> {
             calendarName == "example name" && calendarUrl == "http://example.com"
         })
+    }
+
+    @Test
+    fun closingDialogAfterInputTest() {
+        val liveData = MutableLiveData<CalendarForm>()
+        Mockito.`when`(viewModelInterfaceMock.calendarForm).thenReturn(liveData)
+
+        activityRule.launchActivity(null)
+
+        val addCalendarFragment = AddCalendarDialogFragment()
+        val manager = activityRule.activity.supportFragmentManager
+        addCalendarFragment.show(manager, "abc")
+
+        onView(withId(R.id.calendarNameEditText)).perform(typeText("example name"))
+        onView(withId(R.id.calendarUrlEditText)).perform(typeText("http://example.com"))
+        onView(withId(R.id.saveCalendar)).perform(click())
+
+        Assert.assertTrue(liveData.value!!.calendarName == "example name" && liveData.value!!.calendarUrl == "http://example.com")
+        Mockito.verify(viewModelInterfaceMock).saveNewCalendar(argThat {
+            calendarName == "example name" && calendarUrl == "http://example.com"
+        })
+
+        val successStatus = CalendarForm("example name", "http://example.com")
+        successStatus.nameStatus = CalendarForm.success
+        successStatus.urlStatus = CalendarForm.success
+        activityRule.runOnUiThread { liveData.value = successStatus }
+
+        onView(withId(R.id.saveCalendar)).check(doesNotExist())
     }
 
     @Test

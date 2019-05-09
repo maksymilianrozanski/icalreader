@@ -140,7 +140,7 @@ class ViewModelImpl(application: Application) : BaseViewModel(application), View
             .observeOn(schedulerProvider.ui())
             .subscribeBy(onNext = { eventsData.postValue(it) },
                 onError = {
-                    formToSave.nameError = CalendarForm.unknownError
+                    formToSave.nameStatus = CalendarForm.unknownError
                     calendarForm.postValue(formToSave)
                 }
             )

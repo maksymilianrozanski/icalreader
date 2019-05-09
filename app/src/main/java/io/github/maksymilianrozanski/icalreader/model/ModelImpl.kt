@@ -99,7 +99,7 @@ class ModelImpl @Inject constructor(
                 dataSource.insertCalendarSingle(webCalendar).toObservable(),
                 Observable.just(ResponseWrapper.success(calendarForm))
             ).onErrorReturn {
-                calendarForm.nameError = CalendarForm.databaseError
+                calendarForm.nameStatus = CalendarForm.databaseError
                 ResponseWrapper.error(calendarForm, it.message)
             }
         } else {

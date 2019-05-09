@@ -218,7 +218,7 @@ class ModelImplTest {
 
         model.saveNewCalendar(calendarForm).test().await().assertNoErrors().assertValue {
             it.status == "Error" && it.data == calendarForm && it.message == "Database error"
-                    && it.data.nameError == CalendarForm.databaseError
+                    && it.data.nameStatus == CalendarForm.databaseError
         }
     }
 
@@ -235,7 +235,7 @@ class ModelImplTest {
 
         model.saveNewCalendar(calendarForm).test().await().assertValue {
             it.status == "Error" && it.data.calendarName == "name" && it.data.calendarUrl == "http://invalid url."
-                    && it.data.nameError == null && it.data.urlError == CalendarForm.cannotContainSpaces
+                    && it.data.nameStatus == null && it.data.urlStatus == CalendarForm.cannotContainSpaces
                     && it.message == "Invalid input"
         }
     }

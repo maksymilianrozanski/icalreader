@@ -118,8 +118,8 @@ class ViewModelImplTest {
         Assert.assertTrue(
             calendarReturnedFromModel.calendarName == viewModel.calendarForm.value!!.calendarName
                     && calendarReturnedFromModel.calendarUrl == viewModel.calendarForm.value!!.calendarUrl
-                    && calendarReturnedFromModel.nameError == viewModel.calendarForm.value!!.nameError
-                    && calendarReturnedFromModel.urlError == viewModel.calendarForm.value!!.urlError
+                    && calendarReturnedFromModel.nameStatus == viewModel.calendarForm.value!!.nameStatus
+                    && calendarReturnedFromModel.urlStatus == viewModel.calendarForm.value!!.urlStatus
         )
         Assert.assertEquals(listOf(savedCalendar, calendarToSave), viewModel.calendars.value!!)
     }
@@ -138,7 +138,7 @@ class ViewModelImplTest {
         Mockito.verify(modelMock, timeout(200)).saveNewCalendar(argThat<CalendarForm> {
             equals(calendarFormToSave)
         })
-        Assert.assertEquals(CalendarForm.unknownError, calendarFormToSave.nameError)
+        Assert.assertEquals(CalendarForm.unknownError, calendarFormToSave.nameStatus)
     }
 
     @Test
