@@ -126,6 +126,10 @@ class UITest {
         activityRule.runOnUiThread { liveData.value = successStatus }
 
         onView(withId(R.id.saveCalendar)).check(doesNotExist())
+
+        addCalendarFragment.show(manager, "abc")
+        onView(withId(R.id.calendarNameEditText)).check(matches(withText("")))
+        onView(withId(R.id.calendarUrlEditText)).check(matches(withText("")))
     }
 
     @Test
