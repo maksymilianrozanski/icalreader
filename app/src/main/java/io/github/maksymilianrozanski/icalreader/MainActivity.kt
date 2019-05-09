@@ -81,7 +81,6 @@ class MainActivity : AppCompatActivity() {
             val manager = supportFragmentManager
             val fragment = AddCalendarDialogFragment()
             fragment.show(manager, "abc")
-//            viewModel.saveNewCalendar()
         }
     }
 
