@@ -63,7 +63,7 @@ class CalendarForm(calendarName: String, calendarUrl: String) {
     }
 
     companion object {
-        const val success = 0
+        const val saved = 0
         const val cannotBeBlank = 1
         const val cannotContainSpaces = 2
         const val cannotEndWithDot = 3

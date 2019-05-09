@@ -200,6 +200,7 @@ class ModelImplTest {
 
         model.saveNewCalendar(calendarForm).test().await().assertNoErrors().assertValue {
             it.status == "Success" && it.data == calendarForm
+                    && it.data.nameStatus == CalendarForm.saved && it.data.urlStatus == CalendarForm.saved
         }
     }
 

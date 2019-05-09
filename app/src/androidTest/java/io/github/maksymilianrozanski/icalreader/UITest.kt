@@ -121,8 +121,8 @@ class UITest {
         })
 
         val successStatus = CalendarForm("example name", "http://example.com")
-        successStatus.nameStatus = CalendarForm.success
-        successStatus.urlStatus = CalendarForm.success
+        successStatus.nameStatus = CalendarForm.saved
+        successStatus.urlStatus = CalendarForm.saved
         activityRule.runOnUiThread { liveData.value = successStatus }
 
         onView(withId(R.id.saveCalendar)).check(doesNotExist())

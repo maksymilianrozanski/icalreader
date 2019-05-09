@@ -95,6 +95,8 @@ class ModelImpl @Inject constructor(
         return if (isCalendarFormValid(calendarForm)) {
             val webCalendar =
                 WebCalendar(calendarName = calendarForm.calendarName, calendarUrl = calendarForm.calendarUrl)
+            calendarForm.nameStatus = CalendarForm.saved
+            calendarForm.urlStatus = CalendarForm.saved
             Observable.concatArray(
                 dataSource.insertCalendarSingle(webCalendar).toObservable(),
                 Observable.just(ResponseWrapper.success(calendarForm))
@@ -115,7 +117,7 @@ class ModelImpl @Inject constructor(
         return dataSource.getAllCalendarsSingle().toObservable()
     }
 
-    override fun deleteCalendar(calendar: WebCalendar):Completable {
+    override fun deleteCalendar(calendar: WebCalendar): Completable {
         return dataSource.deleteCalendarCompletable(calendar)
     }
 }
