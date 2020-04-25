@@ -6,8 +6,8 @@ import androidx.test.platform.app.InstrumentationRegistry
 import dagger.Module
 import dagger.Provides
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
-import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
-import io.github.maksymilianrozanski.icalreader.model.storage.EventsDatabase
+import io.github.maksymilianrozanski.icalreader.model.main.storage.EventDao
+import io.github.maksymilianrozanski.icalreader.model.main.storage.EventsDatabase
 import javax.inject.Singleton
 
 @Module

@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader.model
+package io.github.maksymilianrozanski.icalreader.model.main
 
 import net.fortuna.ical4j.model.TimeZone
 import net.fortuna.ical4j.model.TimeZoneRegistry

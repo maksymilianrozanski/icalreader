@@ -3,8 +3,8 @@ package io.github.maksymilianrozanski.icalreader.module
 import android.content.Context
 import dagger.Module
 import dagger.Provides
-import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
-import io.github.maksymilianrozanski.icalreader.model.storage.EventsDatabase
+import io.github.maksymilianrozanski.icalreader.model.main.storage.EventDao
+import io.github.maksymilianrozanski.icalreader.model.main.storage.EventsDatabase
 import javax.inject.Singleton
 
 @Module

@@ -48,6 +48,7 @@ android {
 buildscript {
     ext.lifecycle_version = '2.2.0'
     ext.room_version = '2.2.5'
+    ext.arrow_version = '0.10.4'
 }
 
 dependencies {
@@ -71,6 +72,9 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
     implementation "androidx.room:room-rxjava2:$room_version"
+    implementation "io.arrow-kt:arrow-core:$arrow_version"
+    implementation "io.arrow-kt:arrow-syntax:$arrow_version"
+    kapt "io.arrow-kt:arrow-meta:$arrow_version"
     testImplementation "androidx.room:room-testing:$room_version"
     // https://mvnrepository.com/artifact/io.reactivex.rxjava2/rxkotlin
     implementation group: 'io.reactivex.rxjava2', name: 'rxkotlin', version: '2.3.0'

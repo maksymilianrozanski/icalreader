@@ -1,5 +1,7 @@
 package io.github.maksymilianrozanski.icalreader.model
 
+import io.github.maksymilianrozanski.icalreader.model.main.ICalReaderImpl
+import io.github.maksymilianrozanski.icalreader.model.main.stringToDate
 import net.fortuna.ical4j.validate.ValidationException
 import org.junit.Assert
 import org.junit.Assert.assertTrue
@@ -25,7 +27,8 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReaderImpl()
+        val iCalReader =
+            ICalReaderImpl()
         val output = iCalReader.getCalendarEvents(inputICalString)
         val indexZeroEvent = output[0]
 //TODO: fix so tests will run independently from time zone and daylight saving time
@@ -56,7 +59,8 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReaderImpl()
+        val iCalReader =
+            ICalReaderImpl()
         val output = iCalReader.getCalendarEvents(inputICalString)
         val indexZeroEvent = output[0]
 
@@ -87,7 +91,8 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReaderImpl()
+        val iCalReader =
+            ICalReaderImpl()
         val exceptionMessage = assertFailsWith(ValidationException::class) {
             iCalReader.getCalendarEvents(inputICalString)
         }.message
@@ -113,7 +118,8 @@ class ICalReaderTest {
                 "END:VEVENT\n" +
                 "END:VCALENDAR"
 
-        val iCalReader = ICalReaderImpl()
+        val iCalReader =
+            ICalReaderImpl()
         val exceptionMessage = assertFailsWith(ValidationException::class) {
             iCalReader.getCalendarEvents(inputICalString)
         }.message
@@ -126,8 +132,15 @@ class ICalReaderTest {
     @Test
     fun convertDate() {
         val input = "20180302T173000Z"
-        println(stringToDate(input))
-        val output = stringToDate(input)
+        println(
+            stringToDate(
+                input
+            )
+        )
+        val output =
+            stringToDate(
+                input
+            )
         val outputString: String = output.toString()
         Assert.assertEquals("Fri Mar 02 18:30:00 CET 2018", outputString)
     }

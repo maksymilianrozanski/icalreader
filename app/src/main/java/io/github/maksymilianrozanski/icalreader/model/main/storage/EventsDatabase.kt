@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader.model.storage
+package io.github.maksymilianrozanski.icalreader.model.main.storage
 
 import android.content.Context
 import androidx.room.Database

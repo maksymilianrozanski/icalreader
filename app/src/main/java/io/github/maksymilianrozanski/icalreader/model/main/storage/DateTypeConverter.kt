@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader.model.storage
+package io.github.maksymilianrozanski.icalreader.model.main.storage
 
 import androidx.room.TypeConverter
 import java.util.*

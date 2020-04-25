@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader.model
+package io.github.maksymilianrozanski.icalreader.model.main
 
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import net.fortuna.ical4j.data.CalendarBuilder
@@ -12,12 +12,15 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.Objects.isNull
 
-class ICalReaderImpl : ICalReader {
+class ICalReaderImpl :
+    ICalReader {
 
     override fun getCalendarEvents(inputICal: String): List<CalendarEvent> {
 
         val stringReader = StringReader(inputICal)
-        val calendarBuilder = CalendarBuilder(CalendarParserImpl(), MyTimeZoneRegistry())
+        val calendarBuilder = CalendarBuilder(CalendarParserImpl(),
+            MyTimeZoneRegistry()
+        )
         val calendar: Calendar = calendarBuilder.build(stringReader)
 
         val components = calendar.components
@@ -31,8 +34,14 @@ class ICalReaderImpl : ICalReader {
             val start: Date
             val end: Date
             if (it.getProperty<Property>(Property.DTSTART) != null && it.getProperty<Property>(Property.DTEND) != null) {
-                start = stringToDate(it.getProperty<Property>(Property.DTSTART).value)
-                end = stringToDate(it.getProperty<Property>(Property.DTEND).value)
+                start =
+                    stringToDate(
+                        it.getProperty<Property>(Property.DTSTART).value
+                    )
+                end =
+                    stringToDate(
+                        it.getProperty<Property>(Property.DTEND).value
+                    )
             } else {
                 throw ValidationException(
                     "DTSTART or DTEND property not available. isNull: DTSTART:${

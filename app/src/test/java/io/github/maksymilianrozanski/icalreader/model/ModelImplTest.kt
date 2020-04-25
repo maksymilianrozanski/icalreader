@@ -9,7 +9,9 @@ import io.github.maksymilianrozanski.icalreader.data.APIService
 import io.github.maksymilianrozanski.icalreader.data.CalendarEvent
 import io.github.maksymilianrozanski.icalreader.data.CalendarForm
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
-import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
+import io.github.maksymilianrozanski.icalreader.model.main.ICalReader
+import io.github.maksymilianrozanski.icalreader.model.main.ModelImpl
+import io.github.maksymilianrozanski.icalreader.model.main.storage.EventDao
 import io.github.maksymilianrozanski.icalreader.module.NetworkTestModule
 import io.reactivex.Completable
 import io.reactivex.subjects.SingleSubject
@@ -81,7 +83,12 @@ class ModelImplTest {
         val iCalReader = Mockito.mock(ICalReader::class.java)
         Mockito.`when`(iCalReader.getCalendarEvents(any())).thenReturn(mockedEvents)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val serverBaseUrl = server.url("/").toString()
         val urlPath = "expected/url"
@@ -118,7 +125,12 @@ class ModelImplTest {
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
 
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val serverBaseUrl = server.url("/").toString()
         val urlPath = "expected/url"
@@ -141,7 +153,12 @@ class ModelImplTest {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val eventFromApiOne = CalendarEvent(
             calendarId = "Should be updated",
@@ -190,7 +207,12 @@ class ModelImplTest {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val calendarForm = CalendarForm(calendarName = "Example name", calendarUrl = "http://example.com")
 
@@ -209,7 +231,12 @@ class ModelImplTest {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val calendarForm = CalendarForm(calendarName = "Example name", calendarUrl = "http://example.com")
 
@@ -228,7 +255,12 @@ class ModelImplTest {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val calendarForm = CalendarForm("", "")
         calendarForm.calendarName = "name"
@@ -246,7 +278,12 @@ class ModelImplTest {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val webCalendar = WebCalendar(calendarName = "Example name", calendarUrl = "http://example.com")
         val event = CalendarEvent(
@@ -271,7 +308,12 @@ class ModelImplTest {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val webCalendar = WebCalendar(calendarName = "Example name", calendarUrl = "http://example.com")
 
@@ -290,7 +332,12 @@ class ModelImplTest {
         val apiService = Mockito.mock(APIService::class.java)
         val iCalReader = Mockito.mock(ICalReader::class.java)
         val dataSource = Mockito.mock(EventDao::class.java)
-        val model = ModelImpl(apiService, iCalReader, dataSource)
+        val model =
+            ModelImpl(
+                apiService,
+                iCalReader,
+                dataSource
+            )
 
         val webCalendar = WebCalendar(calendarName = "Example calendar", calendarUrl = "https://example.com")
         Mockito.`when`(dataSource.deleteCalendarCompletable(webCalendar)).thenReturn(Completable.complete())

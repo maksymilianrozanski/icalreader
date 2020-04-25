@@ -11,7 +11,7 @@ import io.github.maksymilianrozanski.icalreader.MainActivity
 import io.github.maksymilianrozanski.icalreader.MyApp
 import io.github.maksymilianrozanski.icalreader.component.AppComponent
 import io.github.maksymilianrozanski.icalreader.data.*
-import io.github.maksymilianrozanski.icalreader.model.Model
+import io.github.maksymilianrozanski.icalreader.model.main.Model
 import io.github.maksymilianrozanski.icalreader.module.*
 import io.reactivex.Completable
 import io.reactivex.Observable

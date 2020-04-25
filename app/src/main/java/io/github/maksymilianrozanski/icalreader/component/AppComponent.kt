@@ -6,7 +6,7 @@ import dagger.Component
 import io.github.maksymilianrozanski.icalreader.EventsAdapter
 import io.github.maksymilianrozanski.icalreader.MainActivity
 import io.github.maksymilianrozanski.icalreader.MyApp
-import io.github.maksymilianrozanski.icalreader.model.Model
+import io.github.maksymilianrozanski.icalreader.model.main.Model
 import io.github.maksymilianrozanski.icalreader.module.*
 import io.github.maksymilianrozanski.icalreader.viewmodel.BaseSchedulerProvider
 import javax.inject.Singleton

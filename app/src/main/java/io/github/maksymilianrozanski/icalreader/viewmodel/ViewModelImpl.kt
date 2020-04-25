@@ -6,7 +6,7 @@ import io.github.maksymilianrozanski.icalreader.data.CalendarData
 import io.github.maksymilianrozanski.icalreader.data.CalendarForm
 import io.github.maksymilianrozanski.icalreader.data.ResponseWrapper
 import io.github.maksymilianrozanski.icalreader.data.WebCalendar
-import io.github.maksymilianrozanski.icalreader.model.Model
+import io.github.maksymilianrozanski.icalreader.model.main.Model
 import io.github.maksymilianrozanski.icalreader.module.NetworkModule
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable

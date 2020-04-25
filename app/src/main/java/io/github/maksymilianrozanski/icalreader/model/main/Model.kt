@@ -1,4 +1,4 @@
-package io.github.maksymilianrozanski.icalreader.model
+package io.github.maksymilianrozanski.icalreader.model.main
 
 import io.github.maksymilianrozanski.icalreader.data.CalendarData
 import io.github.maksymilianrozanski.icalreader.data.CalendarForm

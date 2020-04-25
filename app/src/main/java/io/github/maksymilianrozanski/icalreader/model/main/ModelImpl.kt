@@ -1,7 +1,7 @@
-package io.github.maksymilianrozanski.icalreader.model
+package io.github.maksymilianrozanski.icalreader.model.main
 
 import io.github.maksymilianrozanski.icalreader.data.*
-import io.github.maksymilianrozanski.icalreader.model.storage.EventDao
+import io.github.maksymilianrozanski.icalreader.model.main.storage.EventDao
 import io.reactivex.Completable
 import io.reactivex.Observable
 import javax.inject.Inject
